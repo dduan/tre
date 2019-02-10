@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Pathos",
+        "repositoryURL": "git@github.com:dduan/Pathos.git",
+        "state": {
+          "branch": "master",
+          "revision": "e9517fe757a24f7934d680698e5feffbf1c3ae66",
+          "version": null
+        }
+      },
+      {
+        "package": "Rainbow",
+        "repositoryURL": "https://github.com/onevcat/Rainbow",
+        "state": {
+          "branch": null,
+          "revision": "797a68d0a642609424b08f11eb56974a54d5f6e2",
+          "version": "3.1.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
