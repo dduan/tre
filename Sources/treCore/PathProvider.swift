@@ -25,10 +25,12 @@ public func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> 
 public func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
-    task.arguments = ["git", "ls-files", root] + gitArguments
+    task.arguments = ["git", "ls-files", root]
 
     let pipe = Pipe()
+    let errorPipe = Pipe()
     task.standardOutput = pipe
+    task.standardError = errorPipe
     task.launch()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
