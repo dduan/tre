@@ -1,6 +1,4 @@
-import treCore
-
-func execute(with options: Options) throws {
+public func execute(with options: Options) throws {
     let descendants: [String]
 
     switch options.listing {

@@ -1,7 +1,7 @@
 import Pathos
 import Foundation
 
-public func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> [String] {
+func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> [String] {
     var remains = [root]
     var results = [String]()
 
@@ -22,7 +22,7 @@ public func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> 
     return results.sorted()
 }
 
-public func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
+func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
     task.arguments = ["git", "ls-files", root]

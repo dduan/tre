@@ -54,7 +54,7 @@ extension File {
     }
 }
 
-public func format(root: String = ".", input: [String]) throws -> String {
+func format(root: String = ".", input: [String]) throws -> String {
     var result = File(name: root, type: .directory)
 
     func splitFile(path: String) throws -> (String, File) {
