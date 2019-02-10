@@ -1,3 +1,3 @@
 import treCore
 
-try execute(with: Options.from(arguments: CommandLine.arguments))
+execute(with: Options.from(arguments: CommandLine.arguments))

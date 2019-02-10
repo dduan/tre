@@ -1,7 +1,7 @@
 import Pathos
 import Foundation
 
-func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> [String] {
+func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
     var remains = [root]
     var results = [String]()
 
@@ -11,9 +11,9 @@ func paths(inDirectory root: String, includeHiddenFiles: Bool) throws -> [String
 
     while !remains.isEmpty {
         let path = remains.removeFirst()
-        let childDirectories = try directories(inPath: path).filter(ignoreHidden)
-        let childFiles = try files(inPath: path).filter(ignoreHidden)
-        let childSymbols = try symbolicLinks(inPath: path).filter(ignoreHidden)
+        let childDirectories = (try? directories(inPath: path))?.filter(ignoreHidden) ?? []
+        let childFiles = (try? files(inPath: path))?.filter(ignoreHidden) ?? []
+        let childSymbols = (try? symbolicLinks(inPath: path))?.filter(ignoreHidden) ?? []
 
         results += childDirectories + childFiles + childSymbols
         remains += childDirectories

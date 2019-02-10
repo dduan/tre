@@ -54,17 +54,17 @@ extension File {
     }
 }
 
-func format(root: String = ".", input: [String]) throws -> String {
+func format(root: String = ".", input: [String]) -> String {
     var result = File(name: root, type: .directory)
 
-    func splitFile(path: String) throws -> (String, File) {
+    func splitFile(path: String) -> (String, File) {
         let (prefix, name) = Pathos.split(path: path)
         let parents = prefix
         let node: File
-        if try isDirectory(atPath: path) {
+        if (try? isDirectory(atPath: path)) ?? false {
             node = .init(name: name, type: .directory)
-        } else if try isSymbolicLink(atPath: path) {
-            node = .init(name: name, type: .link, link: try readSymbolicLink(atPath: path))
+        } else if (try? isSymbolicLink(atPath: path)) ?? false {
+            node = .init(name: name, type: .link, link: (try? readSymbolicLink(atPath: path)) ?? "?")
         } else {
             node = .init(name: name, type: .other)
         }
@@ -77,7 +77,7 @@ func format(root: String = ".", input: [String]) throws -> String {
             continue
         }
 
-        let (ancestry, node) = try splitFile(path: normalize(path: path))
+        let (ancestry, node) = splitFile(path: normalize(path: path))
         let ancestrySegments = ancestry
             .split(separator: pathSeparatorCharacter)
             .map(String.init)
