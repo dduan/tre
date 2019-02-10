@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "Pathos",
-        "repositoryURL": "git@github.com:dduan/Pathos.git",
+        "repositoryURL": "https://github.com/dduan/Pathos.git",
         "state": {
           "branch": "master",
           "revision": "e9517fe757a24f7934d680698e5feffbf1c3ae66",

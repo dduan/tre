@@ -12,7 +12,8 @@ let package = Package(
         .package(url: "https://github.com/dduan/Pathos.git", .branch("master")),
     ],
     targets: [
-        .target(name: "treCore", dependencies: ["Pathos"]),
-        .target(name: "tre", dependencies: ["treCore", "Rainbow"]),
+        .target(name: "treCore", dependencies: ["Pathos", "Rainbow"]),
+        .target(name: "tre", dependencies: ["treCore"]),
+        .testTarget(name: "treCoreTests", dependencies: ["treCore"]),
     ]
 )
