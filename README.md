@@ -2,6 +2,20 @@
 
 A replacement for `tree` command that uses `git ls-files` as source of file when possible.
 
+## Install
+
+### Homebrew
+
+```
+brew install dduan/formulae/tre
+```
+
+### Mint
+```
+mint install dduan/tre
+```
+
+### Help
 
 ```
 usage: tre [option] [path]
