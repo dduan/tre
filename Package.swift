@@ -14,6 +14,5 @@ let package = Package(
     targets: [
         .target(name: "treCore", dependencies: ["Pathos", "Rainbow"]),
         .target(name: "tre", dependencies: ["treCore"]),
-        .testTarget(name: "treCoreTests", dependencies: ["treCore"]),
     ]
 )
