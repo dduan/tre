@@ -20,6 +20,8 @@ uninstall:
 clean:
 	@rm -rf .build
 
+test: build
+
 develop-docker:
 	@Scripts/develop-linux-docker.sh
 
