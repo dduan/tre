@@ -2,7 +2,11 @@ prefix      ?= /usr/local
 install_dir  = $(prefix)/bin
 
 build:
+ifeq ($(shell uname -s), Darwin)
 	@swift build -c release -Xswiftc -static-stdlib -Xswiftc -warnings-as-errors --disable-sandbox
+else
+	@swift build -c release -Xswiftc -warnings-as-errors --disable-sandbox
+endif
 
 xcode:
 	@swift package generate-xcodeproj
@@ -15,3 +19,9 @@ uninstall:
 
 clean:
 	@rm -rf .build
+
+develop-docker:
+	@Scripts/develop-linux-docker.sh
+
+test-docker:
+	@Scripts/run-tests-linux-docker.sh
