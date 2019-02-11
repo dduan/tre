@@ -46,7 +46,7 @@ print("...ok")
 # Test tre -a
 print('Testing "tre -a"', end='')
 test3_expectation = [
-    "── hooksx",
+    "── hooks",
     "── .gitignore",
     "── README",
 ]
