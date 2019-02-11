@@ -11,7 +11,8 @@ import tempfile
 test_root = tempfile.mkdtemp()
 tre = os.path.join(os.getcwd(), '.build/release/tre')
 os.chdir(test_root)
-for filename in ["README", ".gitignore"]:
+os.mkdir("dir")
+for filename in ["README", ".gitignore", "dir/a"]:
     with open(filename, 'w') as f:
         f.write("")
 subprocess.call(["git", "init"])
@@ -54,6 +55,18 @@ test3 = subprocess.check_output([tre, "-a"])
 assert(test3.startswith("."))
 for expectation in test3_expectation:
     assert(expectation in test3)
+print("...ok")
+
+# Test tre dir
+print('Testing "tre dir"', end='')
+test4_expectation = [
+    "── hooks",
+    "── .gitignore",
+    "── README",
+]
+test4 = subprocess.check_output([tre, "dir"])
+assert(test4.startswith("dir"))
+assert("└── a" in test4)
 print("...ok")
 
 shutil.rmtree(test_root)

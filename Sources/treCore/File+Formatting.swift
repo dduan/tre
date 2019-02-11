@@ -77,7 +77,8 @@ func format(root: String = ".", input: [String]) -> String {
             continue
         }
 
-        let (ancestry, node) = splitFile(path: normalize(path: path))
+        let (fullAncestry, node) = splitFile(path: normalize(path: path))
+        let ancestry = fullAncestry.dropFirst(commonPath(amongPaths: root, fullAncestry).count)
         let ancestrySegments = ancestry
             .split(separator: pathSeparatorCharacter)
             .map(String.init)
