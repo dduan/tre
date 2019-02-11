@@ -1,3 +1,3 @@
 FROM swift@sha256:501824b412386aa7ba6d08cd8029b5fdda9b6a1e16d688d910cabdbb371ccb51
 ADD . tre
-RUN cd tre; make build
+RUN cd tre; make test
