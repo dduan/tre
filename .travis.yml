@@ -1,0 +1,15 @@
+matrix:
+  include:
+    - os: linux
+      language: generic
+      dist: trusty
+      sudo: required
+      services:
+        - docker
+      script:
+        - make test-docker
+    - os: osx
+      language: objective-c
+      osx_image: xcode10.1
+      script:
+        - make test
