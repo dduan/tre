@@ -18,7 +18,7 @@ uninstall:
 	@rm -rf "$(install_dir)/tre"
 
 clean:
-	@rm -rf .build
+	@rm -rf .build/release/tre
 
 test: clean build integration-test
 
