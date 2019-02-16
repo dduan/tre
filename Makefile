@@ -12,7 +12,7 @@ xcode:
 	@swift package generate-xcodeproj
 
 install: build
-	@install ".build/release/tre" $(install_dir)
+	@install ".build/release/tre" "$(install_dir)/tre"
 
 uninstall:
 	@rm -rf "$(install_dir)/tre"
