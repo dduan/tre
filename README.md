@@ -29,3 +29,7 @@ options:
   -h --help     Show this help message.
   -v --version  Show version.
 ```
+
+### License
+
+MIT. See `LICENSE.md`.
