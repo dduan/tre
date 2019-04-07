@@ -2,11 +2,7 @@ prefix      ?= /usr/local
 install_dir  = $(prefix)/bin
 
 build: clean
-ifeq ($(shell uname -s), Darwin)
-	@swift build -c release -Xswiftc -static-stdlib -Xswiftc -warnings-as-errors --disable-sandbox
-else
 	@swift build -c release -Xswiftc -warnings-as-errors --disable-sandbox
-endif
 
 xcode:
 	@swift package generate-xcodeproj

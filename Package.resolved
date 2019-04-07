@@ -5,9 +5,9 @@
         "package": "Pathos",
         "repositoryURL": "https://github.com/dduan/Pathos.git",
         "state": {
-          "branch": "master",
-          "revision": "e9517fe757a24f7934d680698e5feffbf1c3ae66",
-          "version": null
+          "branch": null,
+          "revision": "02a6e7169919f0e36f50b177a34f28ca39d303d4",
+          "version": "0.1.3"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/onevcat/Rainbow",
         "state": {
           "branch": null,
-          "revision": "797a68d0a642609424b08f11eb56974a54d5f6e2",
-          "version": "3.1.4"
+          "revision": "9c52c1952e9b2305d4507cf473392ac2d7c9b155",
+          "version": "3.1.5"
         }
       }
     ]

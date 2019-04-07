@@ -11,9 +11,9 @@ func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
 
     while !remains.isEmpty {
         let path = remains.removeFirst()
-        let childDirectories = (try? directories(inPath: path))?.filter(ignoreHidden) ?? []
-        let childFiles = (try? files(inPath: path))?.filter(ignoreHidden) ?? []
-        let childSymbols = (try? symbolicLinks(inPath: path))?.filter(ignoreHidden) ?? []
+        let childDirectories = (try? Pathos.childDirectories(inPath: path))?.filter(ignoreHidden) ?? []
+        let childFiles = (try? Pathos.childFiles(inPath: path))?.filter(ignoreHidden) ?? []
+        let childSymbols = (try? Pathos.childSymbolicLinks(inPath: path))?.filter(ignoreHidden) ?? []
 
         results += childDirectories + childFiles + childSymbols
         remains += childDirectories
@@ -24,14 +24,26 @@ func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
 
 func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
     let task = Process()
+#if os(macOS)
     task.launchPath = "/usr/bin/env"
+#elseif swift(>=5.0)
+    task.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+#else
+    task.launchPath = "/usr/bin/env"
+#endif
     task.arguments = ["git", "ls-files", root]
 
     let pipe = Pipe()
     let errorPipe = Pipe()
     task.standardOutput = pipe
     task.standardError = errorPipe
+#if os(macOS)
     task.launch()
+#elseif swift(>=5.0)
+    try? task.run()
+#else
+    task.launch()
+#endif
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     task.waitUntilExit()
