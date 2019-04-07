@@ -54,8 +54,8 @@ extension File {
     }
 }
 
-func format(root: String = ".", input: [String]) -> String {
-    var result = File(name: root, type: .directory)
+func collectDirectoryInfo(root: String = ".", input: [String]) -> File {
+    var directory = File(name: root, type: .directory)
 
     func splitFile(path: String) -> (String, File) {
         let (prefix, name) = Pathos.split(path: path)
@@ -82,9 +82,14 @@ func format(root: String = ".", input: [String]) -> String {
         let ancestrySegments = ancestry
             .split(separator: pathSeparatorCharacter)
             .map(String.init)
-        result.insert(node, ancestry: ancestrySegments)
+        directory.insert(node, ancestry: ancestrySegments)
     }
 
+    return directory
+}
+
+func format(root: String = ".", input: [String]) -> String {
+    let result = collectDirectoryInfo(root: root, input: input)
     var context = [ObjectIdentifier: Int]()
     var output = [String]()
     result.print(inContext: &context, into: &output)
