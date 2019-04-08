@@ -10,9 +10,11 @@ public enum PathListingOption {
 public struct Options {
     let root: String
     let listing: PathListingOption
+    let createEditorAliases: Bool
 
-    public init(root: String, listing: PathListingOption) {
+    public init(root: String, listing: PathListingOption, createEditorAliases: Bool) {
         self.root = root
         self.listing = listing
+        self.createEditorAliases = createEditorAliases
     }
 }

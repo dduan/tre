@@ -5,6 +5,7 @@ extension Options {
         let arguments = args.dropFirst()
         var pathArgument: String? = nil
         var listing = PathListingOption.normal
+        var editorAliases = false
 
         for argument in arguments {
             if argument.lowercased() == "-v" || argument.lowercased() == "--version" {
@@ -15,11 +16,13 @@ extension Options {
                 listing = .hideHiddenFiles
             } else if argument.lowercased() == "-a" || argument.lowercased() == "--all" {
                 listing = .showHiddenFiles
+            } else if argument.lowercased() == "-e" || argument.lowercased() == "--editor-aliases" {
+                editorAliases = true
             } else if !argument.hasPrefix("-") && pathArgument == nil {
                 pathArgument = argument
             }
         }
 
-        return Options(root: pathArgument ?? ".", listing: listing)
+        return Options(root: pathArgument ?? ".", listing: listing, createEditorAliases: editorAliases)
     }
 }
