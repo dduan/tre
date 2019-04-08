@@ -14,13 +14,15 @@ func output(_ formattedLines: [FormattedLine], createEditorAlias: Bool) {
     var tree = [String]()
 
     for (index, formattedLine) in formattedLines.enumerated() {
-        aliases.append("alias e\(index)=\"$EDITOR \\\"\(formattedLine.filePath)\\\"\"")
+        aliases.append("alias e\(index)=\"eval '$EDITOR \\\"\(formattedLine.filePath)\\\"'\"")
         tree.append(formattedLine.render(atIndex: index, addAliasIndiactor: createEditorAlias))
     }
 
 
     print(tree.joined(separator: "\n"))
     let username = ProcessInfo.processInfo.environment["USER"] ?? ""
-    try? write(aliases.joined(separator: "\n"), atPath: "/tmp/tre_aliases_\(username)")
+    let aliasFile = "/tmp/tre_aliases_\(username)"
+    try? deletePath(aliasFile)
+    try? write(aliases.joined(separator: "\n"), atPath: aliasFile)
 }
 
