@@ -57,7 +57,7 @@ tre's output. If pick a number, say, "3", and enter `e3` in the shell, the file
 after "3" will open in your default editor (specified by the environment
 variable `EDITOR`).
 
-Everytime tre runs with this flag, it updates a file `/tmp/tre_aliases_$USER`
+Everytime tre runs with `-e`, it updates a file `/tmp/tre_aliases_$USER`
 and adds a alias for each result it displays. And the shell configuration simply
 sources this file after the command. You can manually run
 
