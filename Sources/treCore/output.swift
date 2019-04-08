@@ -4,7 +4,7 @@ import Rainbow
 
 extension FormattedLine {
     func render(atIndex index: Int, addAliasIndiactor: Bool) -> String {
-        let aliasIndicator = addAliasIndiactor ? "\(index) ".red : ""
+        let aliasIndicator = addAliasIndiactor ? "[\(String(index).red)] " : ""
         return "\(self.treePrefix)\(aliasIndicator)\(self.fileName)"
     }
 }
