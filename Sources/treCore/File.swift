@@ -10,20 +10,22 @@ final class File {
     var name: String
     var link: String?
     var parent: File?
+    let fullPath: String
 
-    init(name: String, type: FileType, link: String? = nil) {
+    init(fullPath: String, name: String, type: FileType, link: String? = nil) {
+        self.fullPath = fullPath
         self.name = name
         self.type = type
         self.link = link
     }
 
-    func insert(_ node: File, ancestry: [String]) {
+    func insert(_ node: File, fullPath: String, ancestry: [String]) {
         var current = self
         for ancestorName in ancestry {
             if let nextAncestor = current.children[ancestorName] {
                 current = nextAncestor
             } else {
-                let newAncestor = File(name: ancestorName, type: .directory)
+                let newAncestor = File(fullPath: fullPath, name: ancestorName, type: .directory)
                 newAncestor.parent = current
                 current.children[ancestorName] = newAncestor
                 current = newAncestor

@@ -12,5 +12,5 @@ public func execute(with options: Options) {
         descendants = paths(inDirectory: options.root, includeHiddenFiles: true)
     }
 
-    print(format(root: options.root, input: descendants))
+    output(format(root: options.root, input: descendants), createEditorAlias: options.createEditorAliases)
 }
