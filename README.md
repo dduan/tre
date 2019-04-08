@@ -8,7 +8,7 @@ associated with it with the default editor. Here's that function in action:
 
 ![Aliasing In Action](alias_demo.gif)
 
-… in case you missed it: "3" is listed in front of "README.md" and typing "e3"
+… in case you missed it: "22" is listed in front of "README.md" and typing "e22"
 opened the file! See [how to set this up](#editor-aliasing).
 
 ## Install
