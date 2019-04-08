@@ -67,7 +67,7 @@ source /tmp/tre_aliases_$USER
 
 … instead of configuring your shell (if you are _that_ patient!).
 
-This feature is inspired by [tag](github.com/keith/tag).
+This feature is inspired by [tag](https://github.com/keith/tag).
 
 ## Help
 
