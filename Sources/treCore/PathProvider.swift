@@ -11,9 +11,9 @@ func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
 
     while !remains.isEmpty {
         let path = remains.removeFirst()
-        let childDirectories = (try? Pathos.childDirectories(inPath: path))?.filter(ignoreHidden) ?? []
-        let childFiles = (try? Pathos.childFiles(inPath: path))?.filter(ignoreHidden) ?? []
-        let childSymbols = (try? Pathos.childSymbolicLinks(inPath: path))?.filter(ignoreHidden) ?? []
+        let childDirectories = (try? children(inPath: path, ofType: .directory))?.filter(ignoreHidden) ?? []
+        let childFiles = (try? children(inPath: path, ofType: .file))?.filter(ignoreHidden) ?? []
+        let childSymbols = (try? children(inPath: path, ofType: .symbolicLink))?.filter(ignoreHidden) ?? []
 
         results += childDirectories + childFiles + childSymbols
         remains += childDirectories

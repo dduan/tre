@@ -67,9 +67,9 @@ func collectDirectoryInfo(root: String = ".", input: [String]) -> File {
         let (prefix, name) = Pathos.split(path: path)
         let parents = prefix
         let node: File
-        if (try? isDirectory(atPath: path)) ?? false {
+        if (try? isA(.directory, atPath: path)) ?? false {
             node = File(fullPath: path, name: name, type: .directory)
-        } else if (try? isSymbolicLink(atPath: path)) ?? false {
+        } else if (try? isA(.symbolicLink, atPath: path)) ?? false {
             node = File(fullPath: path, name: name, type: .link, link: (try? readSymbolicLink(atPath: path)) ?? "?")
         } else {
             node = File(fullPath: path, name: name, type: .other)
