@@ -60,33 +60,30 @@ extension File {
     }
 }
 
-func collectDirectoryInfo(root: String = ".", input: [String]) -> File {
-    var directory = File(fullPath: root, name: root, type: .directory)
+func collectDirectoryInfo(root: String = ".", input: [(String, FileType)]) -> File {
+    let directory = File(fullPath: root, name: root, type: .directory)
 
-    func splitFile(path: String) -> (String, File) {
-        let (prefix, name) = Pathos.split(path: path)
-        let parents = prefix
-        let node: File
-        if (try? isA(.directory, atPath: path)) ?? false {
-            node = File(fullPath: path, name: name, type: .directory)
-        } else if (try? isA(.symbolicLink, atPath: path)) ?? false {
-            node = File(fullPath: path, name: name, type: .link, link: (try? readSymbolicLink(atPath: path)) ?? "?")
-        } else {
-            node = File(fullPath: path, name: name, type: .other)
-        }
-
-        return (parents, node)
-    }
-
-    for path in input {
-        if isAbsolute(path: path) || !exists(atPath: path) || path == "." {
+    for (path, type) in input {
+        if isAbsolute(path: path) || path == "." {
             continue
         }
 
-        let (fullAncestry, node) = splitFile(path: normalize(path: path))
+        let (fullAncestry, name) = Pathos.split(path: path)
+
+        let node: File
+        switch type {
+        case .directory:
+            node = File(fullPath: path, name: name, type: .directory)
+        case .symbolicLink:
+            node = File(fullPath: path, name: name, type: .link, link: (try? readSymbolicLink(atPath: path)) ?? "?")
+        default:
+            node = File(fullPath: path, name: name, type: .other)
+        }
+
         let ancestry = fullAncestry.dropFirst(commonPath(amongPaths: root, fullAncestry).count)
         let ancestrySegments = ancestry
             .split(separator: pathSeparatorCharacter)
+            .filter { $0 != "." }
             .map(String.init)
         directory.insert(node, fullPath: path, ancestry: ancestrySegments)
     }
@@ -94,7 +91,7 @@ func collectDirectoryInfo(root: String = ".", input: [String]) -> File {
     return directory
 }
 
-func format(root: String = ".", input: [String]) -> [FormattedLine] {
+func format(root: String = ".", input: [(String, FileType)]) -> [FormattedLine] {
     let result = collectDirectoryInfo(root: root, input: input)
     var context = [ObjectIdentifier: Int]()
     var output = [FormattedLine]()

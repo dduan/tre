@@ -1,9 +1,9 @@
 import Pathos
 import Foundation
 
-func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
+func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [(String, FileType)] {
     var remains = [root]
-    var results = [String]()
+    var results = [(String, FileType)]()
 
     func ignoreHidden(_ path: String) -> Bool {
         return includeHiddenFiles || !split(path: path).1.hasPrefix(".")
@@ -11,18 +11,19 @@ func paths(inDirectory root: String, includeHiddenFiles: Bool) -> [String] {
 
     while !remains.isEmpty {
         let path = remains.removeFirst()
-        let childDirectories = (try? children(inPath: path, ofType: .directory))?.filter(ignoreHidden) ?? []
-        let childFiles = (try? children(inPath: path, ofType: .file))?.filter(ignoreHidden) ?? []
-        let childSymbols = (try? children(inPath: path, ofType: .symbolicLink))?.filter(ignoreHidden) ?? []
+        let allChildren = ((try? children(inPath: path)) ?? [])
+            .filter { ignoreHidden($0.0) }
 
-        results += childDirectories + childFiles + childSymbols
-        remains += childDirectories
+        results += allChildren
+        remains += allChildren
+            .filter { $1 == .directory }
+            .map { $0.0 }
     }
 
-    return results.sorted()
+    return results
 }
 
-func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
+func gitFiles(inDirectory root: String, gitArguments: [String]) -> [(String, FileType)]? {
     let task = Process()
 #if os(macOS)
     task.launchPath = "/usr/bin/env"
@@ -50,7 +51,16 @@ func gitFiles(inDirectory root: String, gitArguments: [String]) -> [String]? {
 
     if task.terminationStatus == 0 {
         let output = String(data: data, encoding: .utf8)
-        return output?.split(separator: "\n").map(String.init) ?? []
+        let paths = output?.split(separator: "\n").map(String.init) ?? []
+        return paths.map { path in
+            if (try? isA(.directory, atPath: path)) ?? false {
+                return (path, .directory)
+            } else if (try? isA(.symbolicLink, atPath: path)) ?? false {
+                return (path, .symbolicLink)
+            } else {
+                return (path, .file)
+            }
+        }
     } else {
         return nil
     }
