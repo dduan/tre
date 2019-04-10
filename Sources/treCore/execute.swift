@@ -1,9 +1,11 @@
+import Pathos
+
 public func execute(with options: Options) {
-    let descendants: [String]
+    let descendants: [(String, FileType)]
 
     switch options.listing {
     case .normal:
-        var gitDescendants: [String]? = nil
+        var gitDescendants: [(String, FileType)]? = nil
         gitDescendants = gitFiles(inDirectory: options.root, gitArguments: [])
         descendants = gitDescendants ?? paths(inDirectory: options.root, includeHiddenFiles: false)
     case .hideHiddenFiles:
