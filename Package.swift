@@ -9,7 +9,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/onevcat/Rainbow", from: "3.0.0"),
-        .package(url: "https://github.com/dduan/Pathos.git", from: "0.1.3"),
+        .package(url: "https://github.com/dduan/Pathos.git", from: "0.2.0"),
     ],
     targets: [
         .target(name: "treCore", dependencies: ["Pathos", "Rainbow"]),
