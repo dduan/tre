@@ -27,3 +27,5 @@ develop-docker:
 test-docker:
 	@Scripts/run-tests-linux-docker.sh
 
+packages:
+	@Scripts/build-linux-packages-docker.sh
