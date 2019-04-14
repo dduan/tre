@@ -19,7 +19,7 @@ final class File {
         self.link = link
     }
 
-    func insert(_ node: File, fullPath: String, ancestry: [String]) {
+    func insert(_ node: File, fullPath: String, ancestry: ArraySlice<String>) {
         var current = self
         for ancestorName in ancestry {
             if let nextAncestor = current.children[ancestorName] {
