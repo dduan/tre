@@ -16,7 +16,7 @@ extension File {
     func treePrefix(inContext printHistory: [ObjectIdentifier: Int]) -> String {
         var segments = [String]()
         var current = self
-        while let ancestor = current.parent {
+        if let ancestor = current.parent {
             let count = printHistory[ObjectIdentifier(ancestor)] ?? 0
             if let directParent = self.parent, directParent === ancestor {
                 if count == ancestor.children.count - 1 {
@@ -24,12 +24,17 @@ extension File {
                 } else {
                     segments.append("├── ")
                 }
+            }
+
+            current = ancestor
+        }
+
+        while let ancestor = current.parent {
+            let count = printHistory[ObjectIdentifier(ancestor)] ?? 0
+            if count == ancestor.children.count {
+                segments.append("    ")
             } else {
-                if count == ancestor.children.count {
-                    segments.append("    ")
-                } else {
-                    segments.append("│   ")
-                }
+                segments.append("│   ")
             }
 
             current = ancestor
@@ -40,10 +45,7 @@ extension File {
 
     func format(inContext printHistory: inout [ObjectIdentifier: Int], into result: inout [FormattedLine]) {
         let treePrefix = self.treePrefix(inContext: printHistory)
-        let line = FormattedLine(
-            treePrefix: treePrefix,
-            fileName: self.nameText,
-            filePath: self.fullPath)
+        let line = FormattedLine(treePrefix: treePrefix, fileName: self.nameText, filePath: self.fullPath)
         result.append(line)
 
         if let parent = self.parent {
