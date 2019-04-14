@@ -17,8 +17,8 @@ extension File {
         var segments = [String]()
         var current = self
         if let ancestor = current.parent {
-            let count = printHistory[ObjectIdentifier(ancestor)] ?? 0
             if let directParent = self.parent, directParent === ancestor {
+                let count = printHistory[ObjectIdentifier(ancestor)] ?? 0
                 if count == ancestor.children.count - 1 {
                     segments.append("└── ")
                 } else {
@@ -64,6 +64,10 @@ extension File {
 
 func collectDirectoryInfo(root: String = ".", input: [(String, FileType)]) -> File {
     let directory = File(fullPath: root, name: root, type: .directory)
+    let rootSegmentCount = root
+        .split(separator: pathSeparatorCharacter)
+        .filter { $0 != "." }
+        .count
 
     for (path, type) in input {
         if isAbsolute(path: path) || path == "." {
@@ -77,15 +81,16 @@ func collectDirectoryInfo(root: String = ".", input: [(String, FileType)]) -> Fi
         case .directory:
             node = File(fullPath: path, name: name, type: .directory)
         case .symbolicLink:
-            node = File(fullPath: path, name: name, type: .link, link: (try? readSymbolicLink(atPath: path)) ?? "?")
+            node = File(fullPath: path, name: name, type: .link,
+                        link: (try? readSymbolicLink(atPath: path)) ?? "?")
         default:
             node = File(fullPath: path, name: name, type: .other)
         }
 
-        let ancestry = fullAncestry.dropFirst(commonPath(amongPaths: root, fullAncestry).count)
-        let ancestrySegments = ancestry
+        let ancestrySegments = fullAncestry
             .split(separator: pathSeparatorCharacter)
             .filter { $0 != "." }
+            .dropFirst(rootSegmentCount)
             .map(String.init)
         directory.insert(node, fullPath: path, ancestry: ancestrySegments)
     }
