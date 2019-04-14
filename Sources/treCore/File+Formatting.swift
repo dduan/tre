@@ -74,7 +74,14 @@ func collectDirectoryInfo(root: String = ".", input: [(String, FileType)]) -> Fi
             continue
         }
 
-        let (fullAncestry, name) = Pathos.split(path: path)
+        let allSegments = path
+            .split(separator: pathSeparatorCharacter)
+            .filter { $0 != "." }
+            .dropFirst(rootSegmentCount)
+            .map(String.init)
+
+        let name = allSegments.last ?? ""
+        let ancestrySegments = allSegments.dropLast()
 
         let node: File
         switch type {
@@ -87,11 +94,6 @@ func collectDirectoryInfo(root: String = ".", input: [(String, FileType)]) -> Fi
             node = File(fullPath: path, name: name, type: .other)
         }
 
-        let ancestrySegments = fullAncestry
-            .split(separator: pathSeparatorCharacter)
-            .filter { $0 != "." }
-            .dropFirst(rootSegmentCount)
-            .map(String.init)
         directory.insert(node, fullPath: path, ancestry: ancestrySegments)
     }
 
