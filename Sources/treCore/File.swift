@@ -1,3 +1,5 @@
+import Pathos
+
 final class File {
     enum FileType {
         case directory
@@ -21,11 +23,13 @@ final class File {
 
     func insert(_ node: File, fullPath: String, ancestry: ArraySlice<String>) {
         var current = self
-        for ancestorName in ancestry {
+
+        for (i, ancestorName) in ancestry.enumerated() {
             if let nextAncestor = current.children[ancestorName] {
                 current = nextAncestor
             } else {
-                let newAncestor = File(fullPath: fullPath, name: ancestorName, type: .directory)
+                let path = ancestry[0...i].joined(separator: pathSeparator)
+                let newAncestor = File(fullPath: path, name: ancestorName, type: .directory)
                 newAncestor.parent = current
                 current.children[ancestorName] = newAncestor
                 current = newAncestor
