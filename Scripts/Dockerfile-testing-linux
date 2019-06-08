@@ -1,3 +1,0 @@
-FROM swift@sha256:ccaef3f936bd3cabd184a0caf7c2455eb861182b51e77970be4be72bea116a26
-ADD . tre
-RUN cd tre; make test
