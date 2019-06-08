@@ -32,7 +32,7 @@ pub enum TypeSpecficData {
 
 #[derive(Debug, Clone)]
 pub struct File {
-    id: usize,
+    pub id: usize,
     parent: Option<usize>,
     display_name: String,
     path: String,
@@ -40,6 +40,14 @@ pub struct File {
 }
 
 impl File {
+    pub fn children_count(&self) -> usize {
+        if let TypeSpecficData::Directory(children) = &self.data {
+            children.len()
+        } else {
+            0
+        }
+    }
+
     fn child_key(&self, name: &String) -> Option<usize> {
         if let TypeSpecficData::Directory(children) = &self.data {
             children.get(name).cloned()
@@ -157,8 +165,12 @@ impl FileTree {
         }
     }
 
-    fn get(&self, id: usize) -> &File {
+    pub fn get(&self, id: usize) -> &File {
         &self.storage[id]
+    }
+
+    pub fn get_parent(&self, file: &File) -> Option<&File> {
+        file.parent.map(|id| self.get(id))
     }
 }
 
