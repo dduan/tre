@@ -45,7 +45,7 @@ fn print_help() {
     println!("> help")
 }
 fn print_version() {
-    println!("> version")
+    println!("{}", env!("CARGO_PKG_VERSION"));
 }
 pub fn run(option: RunOption) {
     let root = &option.root.unwrap_or(String::from("."));
