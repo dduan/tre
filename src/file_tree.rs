@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum FileType {
     File,
     Directory,
@@ -34,8 +34,9 @@ pub enum TypeSpecficData {
 pub struct File {
     pub id: usize,
     parent: Option<usize>,
-    display_name: String,
-    path: String,
+    pub display_name: String,
+    pub path: String,
+    pub file_type: FileType,
     data: TypeSpecficData,
 }
 
@@ -45,6 +46,14 @@ impl File {
             children.len()
         } else {
             0
+        }
+    }
+
+    pub fn children(&self) -> Option<&HashMap<String, usize>> {
+        if let TypeSpecficData::Directory(children) = &self.data {
+            Some(children)
+        } else {
+            None
         }
     }
 
@@ -85,7 +94,7 @@ pub struct FileTree {
 }
 
 impl FileTree {
-    fn new(root_path: String, children: Vec<(String, FileType)>) -> FileTree {
+    pub fn new(root_path: String, children: Vec<(String, FileType)>) -> FileTree {
         let mut slab = Slab::new();
         let root_id = slab.vacant_entry().key();
 
@@ -103,6 +112,7 @@ impl FileTree {
             parent: None,
             display_name: root_path.clone(),
             path: root_path.clone(),
+            file_type: FileType::Directory,
             data: TypeSpecficData::Directory(HashMap::new()),
         });
         slab.insert(root);
@@ -140,6 +150,7 @@ impl FileTree {
                         parent: Some(current_acestor_id),
                         display_name: display_name.clone(),
                         path: String::from(current_ancestor_path.to_str().unwrap()),
+                        file_type: FileType::Directory,
                         data: TypeSpecficData::Directory(HashMap::new()),
                     }));
                     slab[current_acestor_id].add_child(display_name.clone(), new_id);
@@ -154,6 +165,7 @@ impl FileTree {
                 parent: Some(current_acestor_id),
                 display_name: path_name.clone(),
                 path: path,
+                file_type: meta,
                 data: data,
             }));
             slab[current_acestor_id].add_child(path_name, new_id);
@@ -167,6 +179,10 @@ impl FileTree {
 
     pub fn get(&self, id: usize) -> &File {
         &self.storage[id]
+    }
+
+    pub fn get_root(&self) -> &File {
+        self.get(self.root_id)
     }
 
     pub fn get_parent(&self, file: &File) -> Option<&File> {
