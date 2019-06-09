@@ -70,5 +70,10 @@ pub fn run(option: RunOption) {
         }
     }
     let format_result = formatting::format_paths(root.to_string(), paths);
-    output::print_entries(format_result);
+    output::print_entries(&format_result);
+
+    if let Some(editor) = option.editor {
+        let editor = editor.unwrap_or("$EDITOR".to_string());
+        output::create_edit_aliases(&editor, &format_result);
+    }
 }
