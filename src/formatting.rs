@@ -66,7 +66,7 @@ fn format_file(
     });
 
     if let Some(parent) = tree.get_parent(file) {
-        if let Some(n) = format_history.get(&parent.id) {
+        if let Some(&n) = format_history.get(&parent.id) {
             format_history.insert(parent.id, n + 1);
         }
     }
