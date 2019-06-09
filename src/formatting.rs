@@ -32,7 +32,7 @@ fn make_prefix(tree: &FileTree, file: &File, format_history: &HashMap<usize, usi
 
     while let Some(ancestor) = tree.get_parent(current) {
         let count = format_history.get(&ancestor.id).unwrap_or(&0);
-        if *count >= ancestor.children_count() - 1 {
+        if *count == ancestor.children_count() {
             segments.push(PrefixSegment::Empty);
         } else {
             segments.push(PrefixSegment::ShapeI);
@@ -150,7 +150,7 @@ mod test {
                 file_type: FileType::File,
                 name: String::from("c"),
                 path: String::from("b/c"),
-                prefix: String::from("    └── "),
+                prefix: String::from("│   └── "),
             },
             FormattedEntry {
                 file_type: FileType::File,
