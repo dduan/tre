@@ -20,7 +20,7 @@ where
     stdout.print(&buffer).expect("stdout print failure");
 }
 
-fn print_entries(entries: Vec<FormattedEntry>) {
+pub fn print_entries(entries: Vec<FormattedEntry>) {
     for (index, entry) in entries.iter().enumerate() {
         print!("{}[", entry.prefix);
         color_print(index, Color::Red);

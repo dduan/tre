@@ -84,7 +84,7 @@ fn format_file(
     }
 }
 
-fn format_paths(root_path: String, children: Vec<(String, FileType)>) -> Vec<FormattedEntry> {
+pub fn format_paths(root_path: String, children: Vec<(String, FileType)>) -> Vec<FormattedEntry> {
     let tree = FileTree::new(root_path, children);
     let mut history = HashMap::new();
     let mut result = Vec::new();

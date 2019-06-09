@@ -11,7 +11,7 @@ pub enum FileType {
 }
 
 impl FileType {
-    fn new(meta: Metadata) -> FileType {
+    pub fn new(meta: Metadata) -> FileType {
         let t = meta.file_type();
         if t.is_dir() {
             FileType::Directory

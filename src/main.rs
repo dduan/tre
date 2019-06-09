@@ -4,7 +4,7 @@ mod cli;
 mod file_tree;
 mod formatting;
 mod output;
-mod path_finder;
+mod path_finders;
 mod tre;
 
 fn main() {

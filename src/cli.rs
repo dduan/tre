@@ -1,29 +1,7 @@
-use super::tre::{Mode, RunOption};
-use getopts::Options;
-
-pub fn cli_options() -> Options {
-    let mut opts = Options::new();
-    opts.optflag(
-        "a",
-        "all",
-        "Print all files and directories, including hidden ones.",
-    );
-    opts.optflag(
-        "s",
-        "simple",
-        "Use normal print despite gitignore settings. '-a' has higher priority.",
-    );
-    opts.optflagopt(
-        "e", "editor", "TODO", // TODO
-        "EDITOR",
-    );
-    opts.optflag("v", "version", "Show version number.");
-    opts.optflag("h", "help", "Show this help message.");
-    return opts;
-}
+use crate::tre::{self, Mode, RunOption};
 
 pub fn get_run_option(args: &Vec<String>) -> RunOption {
-    match cli_options().parse(&args[1..]) {
+    match tre::cli_options().parse(&args[1..]) {
         Ok(matches) => {
             let mode: Mode = if matches.opt_present("v") {
                 Mode::Version
