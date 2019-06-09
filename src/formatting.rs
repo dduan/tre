@@ -10,11 +10,12 @@ enum PrefixSegment {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-struct FormattedEntry {
-    file_type: FileType,
-    name: String,
-    path: String,
-    prefix: String,
+pub struct FormattedEntry {
+    pub file_type: FileType,
+    pub name: String,
+    pub path: String,
+    pub prefix: String,
+    pub link: Option<String>,
 }
 
 fn make_prefix(tree: &FileTree, file: &File, format_history: &HashMap<usize, usize>) -> String {
@@ -63,6 +64,7 @@ fn format_file(
         name: file.display_name.clone(),
         path: file.path.clone(),
         prefix: prefix,
+        link: file.link(),
     });
 
     if let Some(parent) = tree.get_parent(file) {
@@ -112,24 +114,28 @@ mod test {
                 name: String::from("."),
                 path: String::from("."),
                 prefix: String::new(),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("a"),
                 path: String::from("a"),
                 prefix: String::from("├── "),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::Directory,
                 name: String::from("b"),
                 path: String::from("./b"),
                 prefix: String::from("└── "),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("c"),
                 path: String::from("b/c"),
                 prefix: String::from("    └── "),
+                link: None,
             },
         ];
 
@@ -139,24 +145,28 @@ mod test {
                 name: String::from("."),
                 path: String::from("."),
                 prefix: String::new(),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::Directory,
                 name: String::from("b"),
                 path: String::from("./b"),
                 prefix: String::from("├── "),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("c"),
                 path: String::from("b/c"),
                 prefix: String::from("│   └── "),
+                link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("a"),
                 path: String::from("a"),
                 prefix: String::from("└── "),
+                link: None,
             },
         ];
 

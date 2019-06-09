@@ -57,6 +57,14 @@ impl File {
         }
     }
 
+    pub fn link(&self) -> Option<String> {
+        if let TypeSpecficData::Link(link) = &self.data {
+            Some(link.clone())
+        } else {
+            None
+        }
+    }
+
     fn child_key(&self, name: &String) -> Option<usize> {
         if let TypeSpecficData::Directory(children) = &self.data {
             children.get(name).cloned()
