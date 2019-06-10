@@ -1,4 +1,6 @@
 use crate::file_tree::FileType;
+use std::fs;
+use std::process::Command;
 use walkdir::{DirEntry, WalkDir};
 
 pub fn find_all_paths(root: &String) -> Vec<(String, FileType)> {
@@ -42,5 +44,21 @@ pub fn find_non_hidden_paths(root: &String) -> Vec<(String, FileType)> {
 }
 
 pub fn find_non_git_ignored_paths(root: &String) -> Vec<(String, FileType)> {
+    if let Ok(git_output) = Command::new("git").arg("ls-files").arg(root).output() {
+        if git_output.status.success() {
+            if let Ok(paths_buf) = String::from_utf8(git_output.stdout) {
+                return paths_buf
+                    .split("\n")
+                    .into_iter()
+                    .filter_map(|p| {
+                        fs::metadata(&p)
+                            .map(|m| (String::from(p), FileType::new(m)))
+                            .ok()
+                    })
+                    .collect();
+            }
+        }
+    }
+
     return find_non_hidden_paths(root);
 }
