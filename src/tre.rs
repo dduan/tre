@@ -17,7 +17,9 @@ pub fn cli_options() -> Options {
         "Use normal print despite gitignore settings. '-a' has higher priority.",
     );
     opts.optflagopt(
-        "e", "editor", "TODO", // TODO
+        "e",
+        "editor",
+        r#"Create aliases for each displayed result in /tmp/tre_aliases_$USER and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with $EDITOR, or a command specified along with this command."#,
         "EDITOR",
     );
     opts.optflag("v", "version", "Show version number.");
@@ -42,8 +44,23 @@ pub struct RunOption {
 }
 
 fn print_help() {
-    println!("> help")
+    let brief = r#"Usage: tre [path] [option]
+
+Print files, directories, and symlinks in tree form.
+
+Hidden files and those configured to be ignored by git will be (optionally)
+ignored.
+
+With correct configuration, each displayed file can have a shell alias created
+for it, which opens the file in the default editor or an otherwise specified
+command.
+
+Path:
+    The root path whose content is to be listed. Defaults to "."."#;
+
+    println!("{}", cli_options().usage(brief));
 }
+
 fn print_version() {
     println!("{}", env!("CARGO_PKG_VERSION"));
 }
