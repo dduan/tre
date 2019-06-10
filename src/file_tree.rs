@@ -139,6 +139,13 @@ impl FileTree {
 
             let mut ancestry: Vec<Component> = Path::new(&path)
                 .components()
+                .filter(|c| {
+                    if let Component::CurDir = c {
+                        false
+                    } else {
+                        true
+                    }
+                })
                 .skip(root_prefix_len)
                 .collect();
             let path_name = String::from(ancestry.pop().unwrap().as_os_str().to_str().unwrap());
