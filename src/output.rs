@@ -37,7 +37,11 @@ pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {
         }
         match &entry.file_type {
             FileType::Directory => {
-                color_print(&entry.name, Color::Blue);
+                if cfg!(windows) {
+                    color_print(&entry.name, Color::Green);
+                } else {
+                    color_print(&entry.name, Color::Blue);
+                }
             }
             FileType::File => {
                 print!("{}", entry.name);
