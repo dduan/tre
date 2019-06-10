@@ -79,6 +79,7 @@ impl File {
         }
     }
 
+    #[cfg(test)]
     fn is_file(&self) -> bool {
         if let TypeSpecficData::File = self.data {
             true
@@ -87,6 +88,7 @@ impl File {
         }
     }
 
+    #[cfg(test)]
     fn is_dir(&self) -> bool {
         if let TypeSpecficData::Directory(_) = self.data {
             true
