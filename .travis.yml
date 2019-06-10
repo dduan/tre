@@ -1,15 +1,75 @@
+dist: trusty
+language: rust
+services: docker
+sudo: required
+
+env:
+  global:
+    - CRATE_NAME=tre
+
 matrix:
   include:
-    - os: linux
-      language: generic
-      dist: trusty
-      sudo: required
-      services:
-        - docker
-      script:
-        - make test-docker
-    - os: osx
-      language: objective-c
-      osx_image: xcode10.2
-      script:
-        - make test
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
+    - env: TARGET=x86_64-unknown-linux-musl
+    - env: TARGET=aarch64-unknown-linux-gnu
+    - env: TARGET=arm-unknown-linux-gnueabi
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+    - env: TARGET=i686-unknown-linux-gnu
+    - env: TARGET=i686-unknown-linux-musl
+    - env: TARGET=mips-unknown-linux-gnu
+    - env: TARGET=mips64-unknown-linux-gnuabi64
+    - env: TARGET=mips64el-unknown-linux-gnuabi64
+    - env: TARGET=mipsel-unknown-linux-gnu
+    - env: TARGET=powerpc-unknown-linux-gnu
+    - env: TARGET=powerpc64-unknown-linux-gnu
+    - env: TARGET=powerpc64le-unknown-linux-gnu
+    - env: TARGET=s390x-unknown-linux-gnu DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-linux-gnu
+    - env: TARGET=i686-apple-darwin
+      os: osx
+    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+
+before_install:
+  - set -e
+  - rustup self update
+
+install:
+  - sh ci/install.sh
+  - source ~/.cargo/env || true
+
+script:
+  - bash ci/script.sh
+
+after_script: set +e
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  api_key:
+    secure: "oGu5P8pJJHVI4x9we6btuapvrbRB2BliDEiUr1X+MokVPC1uWxc+H7/6UIGxDyjot67bETf+gp0RVSUgcz0d5jU/PRKLf2DhLNaY21x2Jd1NBmCE+LOsDk4cB4qrejxyOwPhx2u70lP7s+OEU145xokyFmfcL/XPfnPP82HufU35RUdE5VeGU+y3LfNLtK4b1YD1k19CQ2T/nOW1EEcAMfwvAlz81bsinP5e7CBPYzzPVDjKXtxECR3u4hAE0340rWf/O1+JIYuNKl6HWPoKY1x3g6x9iUoF4MV8z7nZ/0gfAxxP4x3keO1Pw+wPZalKMZQg0VfGoOBG3lRnooJFn5Me68K4PngkKG5Hgd/kbZOXBzTmeBiFRN59Ndw5/u2h33KN257+yGVi/ylaU9NCzSzWT3VaCX/u826/uJaP/OUt0Zud1lBGP6ImGU5t0Hxd0jmCxEHEgUUEQ+jG8mWtbv0PBCDekmPob6MHPMQ7oro51FdHFlYFtUz0HAylVCbyJZocvqaD5eKtCh4v2wqArvlb7rVvAcNNI7DDAbX2KvVHlP2iEUZfK//PSQ/cgM/2Hs6zK6wwE2SNbV3l6CgJZAESSPcH0nESVM0vhtlQiQ8nto8d1Q0rsRJCAcdELJHoR0KKpdH18YsVbDae7LV5p3leopP/vch7XThy7io3OpQ="
+
+  file_glob: true
+  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  on:
+    condition: $TRAVIS_RUST_VERSION = stable
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+cache: cargo
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never
