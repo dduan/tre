@@ -1,6 +1,6 @@
 [package]
 name = "tre"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2018"
 
