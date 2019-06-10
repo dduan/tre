@@ -97,6 +97,7 @@ pub fn format_paths(root_path: String, children: Vec<(String, FileType)>) -> Vec
 mod test {
     use super::FormattedEntry;
     use crate::file_tree::FileType;
+    use std::path;
 
     #[test]
     fn formatting_works() {
@@ -104,7 +105,10 @@ mod test {
             String::from("."),
             vec![
                 (String::from("a"), FileType::File),
-                (String::from("b/c"), FileType::File),
+                (
+                    String::from(format!("b{}c", path::MAIN_SEPARATOR)),
+                    FileType::File,
+                ),
             ],
         );
 
@@ -126,14 +130,14 @@ mod test {
             FormattedEntry {
                 file_type: FileType::Directory,
                 name: String::from("b"),
-                path: String::from("./b"),
+                path: String::from(format!(".{}b", path::MAIN_SEPARATOR)),
                 prefix: String::from("└── "),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("c"),
-                path: String::from("b/c"),
+                path: String::from(format!("b{}c", path::MAIN_SEPARATOR)),
                 prefix: String::from("    └── "),
                 link: None,
             },
@@ -150,14 +154,14 @@ mod test {
             FormattedEntry {
                 file_type: FileType::Directory,
                 name: String::from("b"),
-                path: String::from("./b"),
+                path: String::from(format!(".{}b", path::MAIN_SEPARATOR)),
                 prefix: String::from("├── "),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
                 name: String::from("c"),
-                path: String::from("b/c"),
+                path: String::from(format!("b{}c", path::MAIN_SEPARATOR)),
                 prefix: String::from("│   └── "),
                 link: None,
             },

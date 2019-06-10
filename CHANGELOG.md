@@ -1,3 +1,7 @@
+# 0.2.1
+
+Add initial Windows build.
+
 # 0.2.0
 
 **Breaking change**: The `-e` option now takes an optional argument. When the

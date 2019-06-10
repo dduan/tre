@@ -9,12 +9,12 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
                 Mode::Help
             } else if matches.opt_present("a") {
                 Mode::ShowAllFiles
-            } else if matches.opt_present("s") {
+            } else if !cfg!(windows) && matches.opt_present("s") {
                 Mode::ExcludeHiddenFiles
             } else {
                 Mode::FollowGitIgnore
             };
-            let editor: Option<Option<String>> = if matches.opt_present("e") {
+            let editor: Option<Option<String>> = if !cfg!(windows) && matches.opt_present("e") {
                 Some(matches.opt_str("e"))
             } else {
                 None

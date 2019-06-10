@@ -11,6 +11,8 @@ associated with it with the default editor. Here's that function in action:
 … in case you missed it: "22" is listed in front of "README.md" and typing "e22"
 opened the file! See [how to set this up](#editor-aliasing).
 
+Runs on Unix as well as Windows PowerShell.
+
 ## Install
 
 ### Homebrew or Linuxbrew
@@ -19,7 +21,16 @@ opened the file! See [how to set this up](#editor-aliasing).
 brew install dduan/formulae/tre
 ```
 
+### Windows (Scoop)
+
+```
+scoop bucket add dduan https://github.com/dduan/scoop-bucket
+scoop install tre
+```
+
 ## Editor aliasing
+
+*This feature doesn't work on Windows yet.*
 
 ### Setting it up
 
