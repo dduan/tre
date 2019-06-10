@@ -1,5 +1,6 @@
 use super::file_tree::FileType;
 use super::formatting::FormattedEntry;
+use atty;
 use std::env;
 use std::fmt::Display;
 use std::fs::File;
@@ -11,14 +12,18 @@ fn color_print<T>(text: T, color: Color)
 where
     T: Display,
 {
-    let stdout = BufferWriter::stdout(ColorChoice::Auto);
-    let mut buffer = stdout.buffer();
-    let mut spec = ColorSpec::new();
-    spec.set_fg(Some(color));
-    buffer.set_color(&spec).unwrap();
-    write!(&mut buffer, "{}", text).expect("");
-    buffer.reset().unwrap();
-    stdout.print(&buffer).expect("stdout print failure");
+    if atty::is(atty::Stream::Stdout) {
+        let stdout = BufferWriter::stdout(ColorChoice::Auto);
+        let mut buffer = stdout.buffer();
+        let mut spec = ColorSpec::new();
+        spec.set_fg(Some(color));
+        buffer.set_color(&spec).unwrap();
+        write!(&mut buffer, "{}", text).expect("");
+        buffer.reset().unwrap();
+        stdout.print(&buffer).expect("stdout print failure");
+    } else {
+        print!("{}", text);
+    }
 }
 
 pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {

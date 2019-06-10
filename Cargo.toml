@@ -5,6 +5,7 @@ authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2018"
 
 [dependencies]
+atty = "0.2"
 getopts = "0.2"
 slab = "0.4"
 termcolor = "1"
