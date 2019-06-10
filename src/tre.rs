@@ -59,6 +59,7 @@ Path:
     The root path whose content is to be listed. Defaults to "."."#;
 
     println!("{}", cli_options().usage(brief));
+    println!("Project site: https://github.com/dduan/tre")
 }
 
 fn print_version() {
