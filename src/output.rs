@@ -21,11 +21,15 @@ where
     stdout.print(&buffer).expect("stdout print failure");
 }
 
-pub fn print_entries(entries: &Vec<FormattedEntry>) {
+pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {
     for (index, entry) in entries.iter().enumerate() {
-        print!("{}[", entry.prefix);
-        color_print(index, Color::Red);
-        print!("] ");
+        if create_alias {
+            print!("{}[", entry.prefix);
+            color_print(index, Color::Red);
+            print!("] ");
+        } else {
+            print!("{}", entry.prefix);
+        }
         match &entry.file_type {
             FileType::Directory => {
                 color_print(&entry.name, Color::Blue);
