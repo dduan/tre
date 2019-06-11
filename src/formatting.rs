@@ -102,11 +102,11 @@ mod test {
     #[test]
     fn formatting_works() {
         let formatted = super::format_paths(
-            String::from("."),
+            ".".to_string(),
             vec![
-                (String::from("a"), FileType::File),
+                ("a".to_string(), FileType::File),
                 (
-                    String::from(format!("b{}c", path::MAIN_SEPARATOR)),
+                    format!("b{}c", path::MAIN_SEPARATOR),
                     FileType::File,
                 ),
             ],
@@ -115,30 +115,30 @@ mod test {
         let variant0 = vec![
             FormattedEntry {
                 file_type: FileType::Directory,
-                name: String::from("."),
-                path: String::from("."),
+                name: ".".to_string(),
+                path: ".".to_string(),
                 prefix: String::new(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
-                name: String::from("a"),
-                path: String::from("a"),
-                prefix: String::from("├── "),
+                name: "a".to_string(),
+                path: "a".to_string(),
+                prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::Directory,
-                name: String::from("b"),
-                path: String::from(format!(".{}b", path::MAIN_SEPARATOR)),
-                prefix: String::from("└── "),
+                name: "b".to_string(),
+                path: format!(".{}b", path::MAIN_SEPARATOR),
+                prefix: "└── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
-                name: String::from("c"),
-                path: String::from(format!("b{}c", path::MAIN_SEPARATOR)),
-                prefix: String::from("    └── "),
+                name: "c".to_string(),
+                path: format!("b{}c", path::MAIN_SEPARATOR),
+                prefix: "    └── ".to_string(),
                 link: None,
             },
         ];
@@ -146,30 +146,30 @@ mod test {
         let variant1 = vec![
             FormattedEntry {
                 file_type: FileType::Directory,
-                name: String::from("."),
-                path: String::from("."),
+                name: ".".to_string(),
+                path: ".".to_string(),
                 prefix: String::new(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::Directory,
-                name: String::from("b"),
-                path: String::from(format!(".{}b", path::MAIN_SEPARATOR)),
-                prefix: String::from("├── "),
+                name: "b".to_string(),
+                path: format!(".{}b", path::MAIN_SEPARATOR),
+                prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
-                name: String::from("c"),
-                path: String::from(format!("b{}c", path::MAIN_SEPARATOR)),
-                prefix: String::from("│   └── "),
+                name: "c".to_string(),
+                path: format!("b{}c", path::MAIN_SEPARATOR),
+                prefix: "│   └── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 file_type: FileType::File,
-                name: String::from("a"),
-                path: String::from("a"),
-                prefix: String::from("└── "),
+                name: "a".to_string(),
+                path: "a".to_string(),
+                prefix: "└── ".to_string(),
                 link: None,
             },
         ];

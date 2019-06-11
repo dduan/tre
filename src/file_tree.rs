@@ -65,7 +65,7 @@ impl File {
         }
     }
 
-    fn child_key(&self, name: &String) -> Option<usize> {
+    fn child_key(&self, name: &str) -> Option<usize> {
         if let TypeSpecficData::Directory(children) = &self.data {
             children.get(name).cloned()
         } else {
@@ -73,9 +73,9 @@ impl File {
         }
     }
 
-    fn add_child(&mut self, name: String, id: usize) {
+    fn add_child(&mut self, name: &str, id: usize) {
         if let TypeSpecficData::Directory(children) = &mut self.data {
-            children.insert(name, id);
+            children.insert(name.to_string(), id);
         }
     }
 
@@ -131,7 +131,7 @@ impl FileTree {
             let data: TypeSpecficData = match meta {
                 FileType::Link => {
                     let link_path = fs::read_link(path.clone()).unwrap();
-                    TypeSpecficData::Link(String::from(link_path.to_str().unwrap()))
+                    TypeSpecficData::Link(link_path.to_str().unwrap().to_string())
                 }
                 FileType::Directory => TypeSpecficData::Directory(HashMap::new()),
                 FileType::File => TypeSpecficData::File,
@@ -148,15 +148,14 @@ impl FileTree {
                 })
                 .skip(root_prefix_len)
                 .collect();
-            let path_name = String::from(ancestry.pop().unwrap().as_os_str().to_str().unwrap());
+            let path_name = ancestry.pop().unwrap().as_os_str().to_str().unwrap().to_string();
 
             // Handle intermidiary directories.
             let mut current_acestor_id = root_id;
             let mut current_ancestor_path = PathBuf::new();
             current_ancestor_path.push(&root_path);
             for ancestor_name in ancestry {
-                let display_name =
-                    String::from(ancestor_name.clone().as_os_str().to_str().unwrap());
+                let display_name = ancestor_name.clone().as_os_str().to_str().unwrap().to_string();
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
@@ -166,11 +165,11 @@ impl FileTree {
                         id: new_id,
                         parent: Some(current_acestor_id),
                         display_name: display_name.clone(),
-                        path: String::from(current_ancestor_path.to_str().unwrap()),
+                        path: current_ancestor_path.to_str().unwrap().to_string(),
                         file_type: FileType::Directory,
                         data: TypeSpecficData::Directory(HashMap::new()),
                     }));
-                    slab[current_acestor_id].add_child(display_name.clone(), new_id);
+                    slab[current_acestor_id].add_child(&display_name, new_id);
                     current_acestor_id = new_id;
                 }
             }
@@ -185,7 +184,7 @@ impl FileTree {
                 file_type: meta,
                 data: data,
             }));
-            slab[current_acestor_id].add_child(path_name, new_id);
+            slab[current_acestor_id].add_child(&path_name, new_id);
         }
 
         FileTree {
@@ -214,10 +213,10 @@ mod test {
     #[test]
     fn tree_construction() {
         let tree = FileTree::new(
-            String::from("."),
+            ".".to_string(),
             vec![
-                (String::from("a"), FileType::File),
-                (String::from("b/c/d"), FileType::File),
+                ("a".to_string(), FileType::File),
+                ("b/c/d".to_string(), FileType::File),
             ],
         );
 

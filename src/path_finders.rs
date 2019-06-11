@@ -52,7 +52,7 @@ pub fn find_non_git_ignored_paths(root: &String) -> Vec<(String, FileType)> {
                     .into_iter()
                     .filter_map(|p| {
                         fs::metadata(&p)
-                            .map(|m| (String::from(p), FileType::new(m)))
+                            .map(|m| (p.to_string(), FileType::new(m)))
                             .ok()
                     })
                     .collect();

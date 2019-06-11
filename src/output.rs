@@ -57,7 +57,7 @@ pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {
 }
 
 pub fn create_edit_aliases(editor: &String, entries: &Vec<FormattedEntry>) {
-    let user = env::var("USER").unwrap_or(String::from(""));
+    let user = env::var("USER").unwrap_or("".to_string());
     let alias_file = format!("/tmp/tre_aliases_{}", &user);
     let alias_file = Path::new(&alias_file);
     let file = File::create(&alias_file);
