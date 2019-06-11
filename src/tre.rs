@@ -74,7 +74,7 @@ fn print_version() {
     println!("{}", env!("CARGO_PKG_VERSION"));
 }
 pub fn run(option: RunOption) {
-    let root = &option.root.unwrap_or(String::from("."));
+    let root = &option.root.unwrap_or(".".to_string());
     let paths: Vec<(String, FileType)>;
     match option.mode {
         Mode::Help => {
