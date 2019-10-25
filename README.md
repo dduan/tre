@@ -28,6 +28,12 @@ scoop bucket add dduan https://github.com/dduan/scoop-bucket
 scoop install tre
 ```
 
+### [Snap](https://snapcraft.io)
+
+```
+snap install --devmode --beta tre
+```
+
 ## Editor aliasing
 
 *This feature doesn't work on Windows yet.*
