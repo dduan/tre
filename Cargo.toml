@@ -3,6 +3,13 @@ name = "tre"
 version = "0.2.2"
 authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2018"
+license = "MIT"
+description = "Tree command, improved."
+readme = "README.md"
+homepage = "https://github.com/dduan/tre"
+repository = "https://github.com/dduan/tre"
+keywords = ["cli"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 atty = "0.2"
