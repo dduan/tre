@@ -1,3 +1,8 @@
+.PHONY: check
+check:
+	@cargo check
+
+.PHONY: test
 test:
 	@cargo test
 

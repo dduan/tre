@@ -104,11 +104,11 @@ pub struct FileTree {
 }
 
 impl FileTree {
-    pub fn new(root_path: String, children: Vec<(String, FileType)>) -> FileTree {
+    pub fn new(root_path: &str, children: Vec<(String, FileType)>) -> Option<FileTree> {
         let mut slab = Slab::new();
         let root_id = slab.vacant_entry().key();
 
-        let root_prefix_len: usize = Path::new(&root_path)
+        let root_prefix_len: usize = Path::new(root_path)
             .components()
             .filter(|c| match c {
                 Component::CurDir => false,
@@ -120,22 +120,34 @@ impl FileTree {
         let root = Box::new(File {
             id: root_id,
             parent: None,
-            display_name: root_path.clone(),
-            path: root_path.clone(),
+            display_name: root_path.to_string(),
+            path: root_path.to_string(),
             file_type: FileType::Directory,
             data: TypeSpecficData::Directory(HashMap::new()),
         });
         slab.insert(root);
 
         for (path, meta) in children {
-            let data: TypeSpecficData = match meta {
+            let data_option: Option<TypeSpecficData> = match meta {
                 FileType::Link => {
-                    let link_path = fs::read_link(path.clone()).unwrap();
-                    TypeSpecficData::Link(link_path.to_str().unwrap().to_string())
+                    fs::read_link(&path)
+                        .ok()
+                        .and_then(|path| {
+                            path
+                                .to_str()
+                                .map(|x| x.to_string())
+                        })
+                        .map(|path| TypeSpecficData::Link(path))
                 }
-                FileType::Directory => TypeSpecficData::Directory(HashMap::new()),
-                FileType::File => TypeSpecficData::File,
+                FileType::Directory => Some(TypeSpecficData::Directory(HashMap::new())),
+                FileType::File => Some(TypeSpecficData::File),
             };
+
+            if data_option.is_none() {
+                return None
+            }
+
+            let data = data_option.unwrap();
 
             let mut ancestry: Vec<Component> = Path::new(&path)
                 .components()
@@ -148,14 +160,25 @@ impl FileTree {
                 })
                 .skip(root_prefix_len)
                 .collect();
-            let path_name = ancestry.pop().unwrap().as_os_str().to_str().unwrap().to_string();
+
+            let ancestor = ancestry
+                .pop()
+                .map(|x| x.as_os_str())
+                .and_then(|x| x.to_str())
+                .map(|x| x.to_string());
+
+            if ancestor.is_none() {
+                continue
+            }
+
+            let path_name = ancestor.unwrap();
 
             // Handle intermidiary directories.
             let mut current_acestor_id = root_id;
             let mut current_ancestor_path = PathBuf::new();
             current_ancestor_path.push(&root_path);
             for ancestor_name in ancestry {
-                let display_name = ancestor_name.clone().as_os_str().to_str().unwrap().to_string();
+                let display_name = ancestor_name.clone().as_os_str().to_string_lossy().into_owned();
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
@@ -165,7 +188,7 @@ impl FileTree {
                         id: new_id,
                         parent: Some(current_acestor_id),
                         display_name: display_name.clone(),
-                        path: current_ancestor_path.to_str().unwrap().to_string(),
+                        path: current_ancestor_path.to_string_lossy().into_owned(),
                         file_type: FileType::Directory,
                         data: TypeSpecficData::Directory(HashMap::new()),
                     }));
@@ -187,10 +210,10 @@ impl FileTree {
             slab[current_acestor_id].add_child(&path_name, new_id);
         }
 
-        FileTree {
+        Some(FileTree {
             storage: slab,
             root_id: root_id,
-        }
+        })
     }
 
     pub fn get(&self, id: usize) -> &File {
@@ -213,12 +236,12 @@ mod test {
     #[test]
     fn tree_construction() {
         let tree = FileTree::new(
-            ".".to_string(),
+            ".",
             vec![
                 ("a".to_string(), FileType::File),
                 ("b/c/d".to_string(), FileType::File),
             ],
-        );
+        ).unwrap();
 
         let root = tree.get(tree.root_id);
         assert!(root.is_dir());
