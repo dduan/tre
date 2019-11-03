@@ -86,16 +86,16 @@ pub fn run(option: RunOption) {
             return;
         }
         Mode::FollowGitIgnore => {
-            paths = path_finders::find_non_git_ignored_paths(&root);
+            paths = path_finders::find_non_git_ignored_paths(root);
         }
         Mode::ExcludeHiddenFiles => {
-            paths = path_finders::find_non_hidden_paths(&root);
+            paths = path_finders::find_non_hidden_paths(root);
         }
         Mode::ShowAllFiles => {
-            paths = path_finders::find_all_paths(&root);
+            paths = path_finders::find_all_paths(root);
         }
     }
-    let format_result = formatting::format_paths(root.to_string(), paths);
+    let format_result = formatting::format_paths(root, paths);
 
     if let Some(editor) = option.editor {
         output::print_entries(&format_result, true);
