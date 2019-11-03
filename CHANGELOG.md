@@ -1,3 +1,7 @@
+# 0.2.2
+
+Improve stability. Reduce possibility of crashing.
+
 # 0.2.1
 
 Add initial Windows build.
