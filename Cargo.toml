@@ -5,6 +5,7 @@ authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2018"
 license = "MIT"
 description = "Tree command, improved."
+documentation = "https://github.com/dduan/tre/blob/master/README.md"
 readme = "README.md"
 homepage = "https://github.com/dduan/tre"
 repository = "https://github.com/dduan/tre"
