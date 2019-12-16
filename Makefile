@@ -1,3 +1,8 @@
+.PHONY: build
+build:
+	@cargo build --release
+	@mv target/release/tre-command target/release-tre
+
 .PHONY: check
 check:
 	@cargo check

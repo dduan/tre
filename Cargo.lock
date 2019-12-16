@@ -74,7 +74,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tre"
+name = "tre-command"
 version = "0.2.2"
 dependencies = [
  "atty 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
