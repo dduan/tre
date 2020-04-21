@@ -1,5 +1,5 @@
 name: tre
-version: 0.2.2
+version: 0.2.3
 summary: tree command, improved.
 description: |
   tre is a improved version of the `tree` command.

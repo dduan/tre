@@ -1,3 +1,7 @@
+# 0.2.3
+
+Fixed a issue where single quote in file name prevents editor aliasing
+
 # 0.2.2
 
 Improve stability. Reduce possibility of crashing.
