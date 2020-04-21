@@ -71,7 +71,7 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
             let result = writeln!(
                 &mut alias_file,
                 "alias e{}=\"eval '{} \\\"{}\\\"'\"",
-                index, editor, entry.path
+                index, editor, entry.path.replace("'", "\\'")
             );
 
             if !result.is_ok() {
