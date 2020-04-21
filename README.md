@@ -34,6 +34,13 @@ scoop install tre
 snap install --devmode --beta tre
 ```
 
+### From Source
+
+1. Clone this repository: `git clone https://github.com/dduan/tre.git`.
+2. Ensure you have Rust and Cargo installed. If not, follow instruction [here](https://rustup.rs).
+3. In the root level of this repo, run `cargo build --release`.
+4. Move `target/release/tre` to somewhere in your PATH environment variable.
+
 ## Editor aliasing
 
 *This feature doesn't work on Windows yet.*
