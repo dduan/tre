@@ -14,7 +14,7 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             } else {
                 Mode::FollowGitIgnore
             };
-            let editor: Option<Option<String>> = if !cfg!(windows) && matches.opt_present("e") {
+            let editor: Option<Option<String>> = if matches.opt_present("e") {
                 Some(matches.opt_str("e"))
             } else {
                 None
