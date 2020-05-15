@@ -113,9 +113,9 @@ fn open_alias_file() -> io::Result<File> {
     let user = env::var("USER").unwrap_or("".to_string());
     let alias_file = format!("/tmp/tre_aliases_{}", &user);
     let path: PathBuf = [alias_file].iter().collect();
-    let file = File::create(&alias_file_path);
+    let file = File::create(&path);
     if !file.is_ok() {
-        eprintln!("[tre] failed to open {:?}", alias_file_path);
+        eprintln!("[tre] failed to open {:?}", path);
     }
 
     file
