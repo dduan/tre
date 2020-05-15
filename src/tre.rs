@@ -11,17 +11,33 @@ pub fn cli_options() -> Options {
         "all",
         "Print all files and directories, including hidden ones.",
     );
+
+    {
+        let alias_file_path = if cfg!(windows) {
+            r"%TEMP%\tre_aliases_%USERNAME%"
+        } else {
+            "/tmp/tre_aliases_$USER"
+        };
+
+        let default_program = if cfg!(windows) {
+            "a default program"
+        } else {
+            "$EDITOR"
+        };
+        opts.optflagopt(
+            "e",
+            "editor",
+            &format!(r#"Create aliases for each displayed result in {} and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with {}, or a command specified along with this command."#,
+                    alias_file_path,
+                    default_program),
+            "EDITOR",
+        );
+    }
     if !cfg!(windows) {
         opts.optflag(
             "s",
             "simple",
             "Use normal print despite gitignore settings. '-a' has higher priority.",
-        );
-        opts.optflagopt(
-            "e",
-            "editor",
-            r#"Create aliases for each displayed result in /tmp/tre_aliases_$USER and add a number in front of file name to indicate the alias name. For example, a number "42" means an shell alias "e42" has been created. Running "e42" will cause the associated file or directory to be open with $EDITOR, or a command specified along with this command."#,
-            "EDITOR",
         );
     }
     opts.optflag("v", "version", "Show version number.");
@@ -99,7 +115,11 @@ pub fn run(option: RunOption) {
 
     if let Some(editor) = option.editor {
         output::print_entries(&format_result, true);
-        let editor = editor.unwrap_or("$EDITOR".to_string());
+        let editor = if cfg!(windows) {
+            editor.unwrap_or("".to_string())
+        } else {
+            editor.unwrap_or("$EDITOR".to_string())
+        };
         output::create_edit_aliases(&editor, &format_result);
     } else {
         output::print_entries(&format_result, false);
