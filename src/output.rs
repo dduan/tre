@@ -107,8 +107,6 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
 }
 
 #[cfg(not(target_os = "windows"))]
-fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> { unimplemented!() }
-#[cfg(not(target_os = "windows"))]
 fn open_alias_file() -> io::Result<File> {
     let user = env::var("USER").unwrap_or("".to_string());
     let alias_file = format!("/tmp/tre_aliases_{}", &user);
