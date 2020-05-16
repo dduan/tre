@@ -1,3 +1,8 @@
+# 0.3.0
+
+Added editor/program aliasing support for Command Prompt and PowerShell on
+Windows.
+
 # 0.2.3
 
 Fixed a issue where single quote in file name prevents editor aliasing
