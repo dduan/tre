@@ -21,6 +21,11 @@ Runs on Unix as well as Windows PowerShell.
 brew install dduan/formulae/tre
 ```
 
+### Nix
+
+`tre` is available in the official nixpkgs channel as `tre-command`. You can use
+it with your favorite Nix-y way.
+
 ### Windows (Scoop)
 
 ```
