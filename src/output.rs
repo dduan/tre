@@ -75,12 +75,12 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     if let Some(mut alias_file) = powershell_alias.ok() {
         for (index, entry) in entries.iter().enumerate() {
-            let editor_part = format!("{}{}", editor, if editor.is_empty() { "" } else { " " });
+            let editor = format!("{}", if editor.is_empty() { "Start-Process" } else { editor });
             let result = writeln!(
                 &mut alias_file,
-                "doskey /exename=pwsh.exe e{}={}{}\ndoskey /exename=powershell.exe e{}={}{}",
-                index, editor_part, entry.path,
-                index, editor_part, entry.path,
+                "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
+                index, editor, entry.path,
+                index, editor, entry.path,
             );
 
             if !result.is_ok() {
@@ -92,11 +92,11 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
     let cmd_alias = open_alias_file_with_suffix("bat");
     if let Some(mut alias_file) = cmd_alias.ok() {
         for (index, entry) in entries.iter().enumerate() {
-            let editor_part = format!("{}{}", editor, if editor.is_empty() { "" } else { " " });
+            let editor = format!("{}", if editor.is_empty() { "START" } else { editor });
             let result = writeln!(
                 &mut alias_file,
-                "doskey /exename=cmd.exe e{}={}{}",
-                index, editor_part, entry.path,
+                "doskey /exename=cmd.exe e{}={} {}",
+                index, editor, entry.path,
             );
 
             if !result.is_ok() {
