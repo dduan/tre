@@ -1,0 +1,42 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        action:
+          - build
+          - test
+    steps:
+    - uses: actions/checkout@v1
+    - name: Action
+      run: cargo ${{ matrix.action }}
+
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        action:
+          - build
+          - test
+    steps:
+    - uses: actions/checkout@v1
+    - name: Action
+      run: cargo ${{ matrix.action }}
+
+  Windows:
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        action:
+          - build
+          - test
+    steps:
+    - uses: actions/checkout@v1
+    - name: Action
+      run: cargo ${{ matrix.action }}
