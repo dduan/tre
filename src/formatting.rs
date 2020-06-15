@@ -89,13 +89,11 @@ pub fn format_paths(root_path: &str, children: Vec<(String, FileType)>) -> Vec<F
     let mut result = Vec::new();
     match FileTree::new(root_path, children) {
         Some(tree) => {
-        let root = tree.get_root();
+            let root = tree.get_root();
             format_file(&tree, root, &mut history, &mut result);
             result
-        },
-        None => {
-            Vec::new()
         }
+        None => Vec::new(),
     }
 }
 
@@ -111,10 +109,7 @@ mod test {
             ".",
             vec![
                 ("a".to_string(), FileType::File),
-                (
-                    format!("b{}c", path::MAIN_SEPARATOR),
-                    FileType::File,
-                ),
+                (format!("b{}c", path::MAIN_SEPARATOR), FileType::File),
             ],
         );
 
