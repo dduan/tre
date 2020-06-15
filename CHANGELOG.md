@@ -1,5 +1,7 @@
 # master
 
+# 0.3.1
+
 Support LS_COLORS, with a default set of colors.
 
 # 0.3.0
