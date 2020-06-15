@@ -1,3 +1,7 @@
+# master
+
+Support LS_COLORS, with a default set of colors.
+
 # 0.3.0
 
 Added editor/program aliasing support for Command Prompt and PowerShell on
