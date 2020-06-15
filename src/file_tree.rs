@@ -129,22 +129,16 @@ impl FileTree {
 
         for (path, meta) in children {
             let data_option: Option<TypeSpecficData> = match meta {
-                FileType::Link => {
-                    fs::read_link(&path)
-                        .ok()
-                        .and_then(|path| {
-                            path
-                                .to_str()
-                                .map(|x| x.to_string())
-                        })
-                        .map(|path| TypeSpecficData::Link(path))
-                }
+                FileType::Link => fs::read_link(&path)
+                    .ok()
+                    .and_then(|path| path.to_str().map(|x| x.to_string()))
+                    .map(|path| TypeSpecficData::Link(path)),
                 FileType::Directory => Some(TypeSpecficData::Directory(HashMap::new())),
                 FileType::File => Some(TypeSpecficData::File),
             };
 
             if data_option.is_none() {
-                return None
+                return None;
             }
 
             let data = data_option.unwrap();
@@ -168,7 +162,7 @@ impl FileTree {
                 .map(|x| x.to_string());
 
             if ancestor.is_none() {
-                continue
+                continue;
             }
 
             let path_name = ancestor.unwrap();
@@ -178,7 +172,11 @@ impl FileTree {
             let mut current_ancestor_path = PathBuf::new();
             current_ancestor_path.push(&root_path);
             for ancestor_name in ancestry {
-                let display_name = ancestor_name.clone().as_os_str().to_string_lossy().into_owned();
+                let display_name = ancestor_name
+                    .clone()
+                    .as_os_str()
+                    .to_string_lossy()
+                    .into_owned();
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
@@ -241,7 +239,8 @@ mod test {
                 ("a".to_string(), FileType::File),
                 ("b/c/d".to_string(), FileType::File),
             ],
-        ).unwrap();
+        )
+        .unwrap();
 
         let root = tree.get(tree.root_id);
         assert!(root.is_dir());

@@ -8,7 +8,10 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
-fn color_print<T>(text: T, color: Color) -> bool where T: Display {
+fn color_print<T>(text: T, color: Color) -> bool
+where
+    T: Display,
+{
     if atty::is(atty::Stream::Stdout) {
         let stdout = BufferWriter::stdout(ColorChoice::Auto);
         let mut buffer = stdout.buffer();
@@ -58,7 +61,11 @@ pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {
 
 #[cfg(target_os = "windows")]
 fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> {
-    let file_name = format!("tre_aliases_{}.{}", env::var("USERNAME").unwrap_or("".to_string()), suffix);
+    let file_name = format!(
+        "tre_aliases_{}.{}",
+        env::var("USERNAME").unwrap_or("".to_string()),
+        suffix
+    );
     let home = env::var("HOME").unwrap_or(r".".to_string());
     let tmp = env::var("TEMP").unwrap_or(home);
     let path: PathBuf = [tmp, file_name].iter().collect();
@@ -75,12 +82,18 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     if let Some(mut alias_file) = powershell_alias.ok() {
         for (index, entry) in entries.iter().enumerate() {
-            let editor = format!("{}", if editor.is_empty() { "Start-Process" } else { editor });
+            let editor = format!(
+                "{}",
+                if editor.is_empty() {
+                    "Start-Process"
+                } else {
+                    editor
+                }
+            );
             let result = writeln!(
                 &mut alias_file,
                 "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
-                index, editor, entry.path,
-                index, editor, entry.path,
+                index, editor, entry.path, index, editor, entry.path,
             );
 
             if !result.is_ok() {
@@ -127,7 +140,9 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
             let result = writeln!(
                 &mut alias_file,
                 "alias e{}=\"eval '{} \\\"{}\\\"'\"",
-                index, editor, entry.path.replace("'", "\\'")
+                index,
+                editor,
+                entry.path.replace("'", "\\'")
             );
 
             if !result.is_ok() {
