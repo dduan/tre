@@ -1,6 +1,6 @@
-use super::file_tree::FileType;
 use super::formatting::FormattedEntry;
 use atty;
+use lscolors::{self, LsColors, Style};
 use std::env;
 use std::fmt::Display;
 use std::fs::File;
@@ -8,17 +8,15 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
-fn color_print<T>(text: T, color: Color) -> bool
+fn color_print<T>(text: T, color: &ColorSpec) -> bool
 where
     T: Display,
 {
     if atty::is(atty::Stream::Stdout) {
         let stdout = BufferWriter::stdout(ColorChoice::Auto);
         let mut buffer = stdout.buffer();
-        let mut spec = ColorSpec::new();
-        spec.set_fg(Some(color));
         buffer
-            .set_color(&spec)
+            .set_color(&color)
             .and_then(|_| write!(&mut buffer, "{}", text))
             .and_then(|_| buffer.reset())
             .and_then(|_| stdout.print(&buffer))
@@ -29,32 +27,22 @@ where
     }
 }
 
-pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool) {
+pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool, lscolors: &LsColors) {
     for (index, entry) in entries.iter().enumerate() {
         if create_alias {
             print!("{}[", entry.prefix);
-            color_print(index, Color::Red);
+
+            color_print(index, ColorSpec::new().set_fg(Some(Color::Red)));
             print!("] ");
         } else {
             print!("{}", entry.prefix);
         }
-        match &entry.file_type {
-            FileType::Directory => {
-                if cfg!(windows) {
-                    color_print(&entry.name, Color::Green);
-                } else {
-                    color_print(&entry.name, Color::Blue);
-                }
-            }
-            FileType::File => {
-                print!("{}", entry.name);
-            }
-            FileType::Link => {
-                color_print(&entry.name, Color::Magenta);
-                let link = &entry.link;
-                print!(" -> {}", link.clone().unwrap_or("".to_string()));
-            }
-        }
+
+        let style = lscolors
+            .style_for_path(&entry.path)
+            .map(Style::to_ansi_term_style)
+            .unwrap_or_default();
+        print!("{}", style.paint(&entry.name));
         print!("\n")
     }
 }

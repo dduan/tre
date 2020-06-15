@@ -11,7 +11,6 @@ enum PrefixSegment {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct FormattedEntry {
-    pub file_type: FileType,
     pub name: String,
     pub path: String,
     pub prefix: String,
@@ -60,7 +59,6 @@ fn format_file(
 ) {
     let prefix = make_prefix(tree, file, &format_history);
     result.push(FormattedEntry {
-        file_type: file.file_type.clone(),
         name: file.display_name.clone(),
         path: file.path.clone(),
         prefix: prefix,
@@ -115,28 +113,24 @@ mod test {
 
         let variant0 = vec![
             FormattedEntry {
-                file_type: FileType::Directory,
                 name: ".".to_string(),
                 path: ".".to_string(),
                 prefix: String::new(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::File,
                 name: "a".to_string(),
                 path: "a".to_string(),
                 prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::Directory,
                 name: "b".to_string(),
                 path: format!(".{}b", path::MAIN_SEPARATOR),
                 prefix: "└── ".to_string(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::File,
                 name: "c".to_string(),
                 path: format!("b{}c", path::MAIN_SEPARATOR),
                 prefix: "    └── ".to_string(),
@@ -146,28 +140,24 @@ mod test {
 
         let variant1 = vec![
             FormattedEntry {
-                file_type: FileType::Directory,
                 name: ".".to_string(),
                 path: ".".to_string(),
                 prefix: String::new(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::Directory,
                 name: "b".to_string(),
                 path: format!(".{}b", path::MAIN_SEPARATOR),
                 prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::File,
                 name: "c".to_string(),
                 path: format!("b{}c", path::MAIN_SEPARATOR),
                 prefix: "│   └── ".to_string(),
                 link: None,
             },
             FormattedEntry {
-                file_type: FileType::File,
                 name: "a".to_string(),
                 path: "a".to_string(),
                 prefix: "└── ".to_string(),

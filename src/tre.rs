@@ -3,6 +3,7 @@ use crate::formatting;
 use crate::output;
 use crate::path_finders;
 use getopts::Options;
+use lscolors::LsColors;
 
 pub fn cli_options() -> Options {
     let mut opts = Options::new();
@@ -113,8 +114,10 @@ pub fn run(option: RunOption) {
     }
     let format_result = formatting::format_paths(root, paths);
 
+    let lscolors = LsColors::from_env().unwrap_or_default();
+
     if let Some(editor) = option.editor {
-        output::print_entries(&format_result, true);
+        output::print_entries(&format_result, true, &lscolors);
         let editor = if cfg!(windows) {
             editor.unwrap_or("".to_string())
         } else {
@@ -122,6 +125,6 @@ pub fn run(option: RunOption) {
         };
         output::create_edit_aliases(&editor, &format_result);
     } else {
-        output::print_entries(&format_result, false);
+        output::print_entries(&format_result, false, &lscolors);
     }
 }
