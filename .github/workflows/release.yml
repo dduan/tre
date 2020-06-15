@@ -168,7 +168,7 @@ jobs:
       shell: bash
       run: |
         outdir=${{ env.TARGET_DIR }}
-        staging="StreamLogger-${{ env.RELEASE_VERSION }}-${{ matrix.target }}"
+        staging="tre-${{ env.RELEASE_VERSION }}-${{ matrix.target }}"
         mkdir -p "$staging"/{complete,doc}
 
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
