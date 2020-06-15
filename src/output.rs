@@ -38,13 +38,46 @@ pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool, lscolors
             print!("{}", entry.prefix);
         }
 
-        let style = lscolors
+        let spec = lscolors
             .style_for_path(&entry.path)
-            .map(Style::to_ansi_term_style)
+            .map(convert_to_color_spec)
             .unwrap_or_default();
-        print!("{}", style.paint(&entry.name));
+        color_print(&entry.name, &spec);
         print!("\n")
     }
+}
+
+fn convert_color(color: &lscolors::Color) -> Color {
+    match color {
+        lscolors::Color::RGB(r, g, b) => Color::Rgb(*r, *g, *b),
+        lscolors::Color::Fixed(n) => Color::Ansi256(*n),
+        lscolors::Color::Black => Color::Black,
+        lscolors::Color::Red => Color::Red,
+        lscolors::Color::Green => Color::Green,
+        lscolors::Color::Yellow => Color::Yellow,
+        lscolors::Color::Blue => Color::Blue,
+        lscolors::Color::Magenta => Color::Magenta,
+        lscolors::Color::Cyan => Color::Cyan,
+        lscolors::Color::White => Color::White,
+    }
+}
+
+fn convert_to_color_spec(style: &Style) -> ColorSpec {
+    let mut spec = ColorSpec::new();
+
+    if let Some(color) = &style.foreground {
+        spec.set_fg(Some(convert_color(&color)));
+    }
+
+    if let Some(color) = &style.background {
+        spec.set_bg(Some(convert_color(&color)));
+    }
+
+    spec.set_bold(style.font_style.bold);
+    spec.set_italic(style.font_style.italic);
+    spec.set_underline(style.font_style.underline);
+
+    spec
 }
 
 #[cfg(target_os = "windows")]
