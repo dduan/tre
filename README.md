@@ -39,6 +39,13 @@ scoop install tre
 snap install --devmode --beta tre
 ```
 
+### Manually download an executable
+
+Choose an pre-built executable from the [release page][] that fits your
+platform to download. Unpack it somewhere you'd like to run it from.
+
+[release page]: https://github.com/dduan/tre/releases
+
 ### From Source
 
 1. Clone this repository: `git clone https://github.com/dduan/tre.git`.
