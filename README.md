@@ -33,7 +33,7 @@ scoop bucket add dduan https://github.com/dduan/scoop-bucket
 scoop install tre
 ```
 
-### Manually download an executable
+### Pre-built executable
 
 Choose an pre-built executable from the [release page][] that fits your
 platform to download. Unpack it somewhere you'd like to run it from.
