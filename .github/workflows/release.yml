@@ -169,15 +169,12 @@ jobs:
       run: |
         outdir=${{ env.TARGET_DIR }}
         staging="tre-${{ env.RELEASE_VERSION }}-${{ matrix.target }}"
-        mkdir -p "$staging"/{complete,doc}
 
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
-          cp "target/${{ matrix.target }}/release/tre.exe" "$staging/"
-          7z a "$staging.zip" "$staging"
+          7z a "$staging.zip" "./target/${{ matrix.target }}/release/tre.exe"
           echo "::set-env name=ASSET::$staging.zip"
         else
-          cp "target/${{ matrix.target }}/release/tre" "$staging/"
-          tar czf "$staging.tar.gz" "$staging"
+          tar -C "target/${{ matrix.target }}/release" -czf "$staging.tar.gz" tre
           echo "::set-env name=ASSET::$staging.tar.gz"
         fi
 
