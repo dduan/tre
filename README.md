@@ -33,12 +33,6 @@ scoop bucket add dduan https://github.com/dduan/scoop-bucket
 scoop install tre
 ```
 
-### [Snap](https://snapcraft.io)
-
-```
-snap install --devmode --beta tre
-```
-
 ### Manually download an executable
 
 Choose an pre-built executable from the [release page][] that fits your
