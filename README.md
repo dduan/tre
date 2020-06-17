@@ -18,7 +18,7 @@ Runs on Unix as well as Windows PowerShell.
 ### Homebrew or Linuxbrew
 
 ```
-brew install dduan/formulae/tre
+brew install tre-command
 ```
 
 ### Nix
