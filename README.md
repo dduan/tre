@@ -13,6 +13,9 @@ opened the file! See [how to set this up](#editor-aliasing).
 
 Runs on Unix as well as Windows PowerShell.
 
+The colors of the output for different file types/diretory, etc, changes
+according to the `LS_COLORS` environment variable.
+
 ## Install
 
 ### Homebrew or Linuxbrew
