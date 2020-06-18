@@ -13,8 +13,10 @@ opened the file! See [how to set this up](#editor-aliasing).
 
 Runs on Unix as well as Windows PowerShell.
 
-The colors of the output for different file types/diretory, etc, changes
-according to the `LS_COLORS` environment variable.
+The colors of the output for different file types/diretory, etc, is defined by
+the [LS_COLORS][] environment variable (with a set of defaults values).
+
+[LS_COLORS]: https://man7.org/linux/man-pages/man5/dir_colors.5.html
 
 ## Install
 
