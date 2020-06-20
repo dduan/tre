@@ -29,7 +29,11 @@ brew install tre-command
 ### Nix
 
 `tre` is available in the official nixpkgs channel as `tre-command`. You can use
-it with your favorite Nix-y way.
+it with your favorite Nix-y way. For example:
+
+```
+nix-env -i tre-command
+```
 
 ### Windows (Scoop)
 
