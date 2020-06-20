@@ -34,8 +34,7 @@ it with your favorite Nix-y way.
 ### Windows (Scoop)
 
 ```
-scoop bucket add dduan https://github.com/dduan/scoop-bucket
-scoop install tre
+scoop install tre-command
 ```
 
 ### Pre-built executable
