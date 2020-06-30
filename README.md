@@ -131,7 +131,7 @@ Everytime tre runs with `-e`, it updates a file in a temporary directory, and
 adds an alias for each result it displays. And the additional configuration
 simply sources this file after the command. You can manually run
 
-in bash:
+in Bash/Zsh/Fish:
 ```bash
 source /tmp/tre_aliases_$USER
 ```
