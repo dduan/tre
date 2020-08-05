@@ -1,5 +1,7 @@
 # master
 
+- Add '--directotries-only/-d' option, which limits output to only directories.
+
 # 0.3.1
 
 Support LS_COLORS, with a default set of colors.
