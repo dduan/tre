@@ -13,6 +13,12 @@ pub fn cli_options() -> Options {
         "Print all files and directories, including hidden ones.",
     );
 
+    opts.optflag(
+        "d",
+        "directories",
+        "Only list directories in output.",
+    );
+
     {
         let alias_file_path = if cfg!(windows) {
             r"%TEMP%\tre_aliases_%USERNAME%"
@@ -59,6 +65,7 @@ pub enum Mode {
 pub struct RunOption {
     pub editor: Option<Option<String>>,
     pub mode: Mode,
+    pub directories_only: bool,
     pub root: Option<String>,
 }
 
@@ -92,6 +99,7 @@ fn print_version() {
 }
 pub fn run(option: RunOption) {
     let root = &option.root.unwrap_or(".".to_string());
+    let directories_only = option.directories_only;
     let paths: Vec<(String, FileType)>;
     match option.mode {
         Mode::Help => {
@@ -103,13 +111,13 @@ pub fn run(option: RunOption) {
             return;
         }
         Mode::FollowGitIgnore => {
-            paths = path_finders::find_non_git_ignored_paths(root);
+            paths = path_finders::find_non_git_ignored_paths(root, directories_only);
         }
         Mode::ExcludeHiddenFiles => {
-            paths = path_finders::find_non_hidden_paths(root);
+            paths = path_finders::find_non_hidden_paths(root, directories_only);
         }
         Mode::ShowAllFiles => {
-            paths = path_finders::find_all_paths(root);
+            paths = path_finders::find_all_paths(root, directories_only);
         }
     }
     let format_result = formatting::format_paths(root, paths);

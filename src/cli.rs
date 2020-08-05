@@ -14,6 +14,8 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             } else {
                 Mode::FollowGitIgnore
             };
+
+            let directories_only = matches.opt_present("d");
             let editor: Option<Option<String>> = if matches.opt_present("e") {
                 Some(matches.opt_str("e"))
             } else {
@@ -24,15 +26,18 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             } else {
                 Some(matches.free[0].clone())
             };
+
             RunOption {
                 mode: mode,
                 editor: editor,
+                directories_only: directories_only,
                 root: root,
             }
         }
         Err(_) => RunOption {
             mode: Mode::Help,
             editor: None,
+            directories_only: false,
             root: None,
         },
     }
