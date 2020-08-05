@@ -106,7 +106,8 @@ pub struct FileTree {
 impl FileTree {
     pub fn new(root_path: &str, children: Vec<(String, FileType)>) -> Option<FileTree> {
         let mut slab = Slab::new();
-        let root_id = slab.vacant_entry().key();
+        let root_entry = slab.vacant_entry();
+        let root_id = root_entry.key();
 
         let root_prefix_len: usize = Path::new(root_path)
             .components()
@@ -125,7 +126,7 @@ impl FileTree {
             file_type: FileType::Directory,
             data: TypeSpecficData::Directory(HashMap::new()),
         });
-        slab.insert(root);
+        root_entry.insert(root);
 
         for (path, meta) in children {
             let data_option: Option<TypeSpecficData> = match meta {
@@ -180,9 +181,10 @@ impl FileTree {
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
-                    let new_id = slab.vacant_entry().key();
+                    let new_entry = slab.vacant_entry();
+                    let new_id = new_entry.key();
                     current_ancestor_path.push(&display_name);
-                    slab.insert(Box::new(File {
+                    new_entry.insert(Box::new(File {
                         id: new_id,
                         parent: Some(current_acestor_id),
                         display_name: display_name.clone(),
@@ -196,8 +198,9 @@ impl FileTree {
             }
 
             // Finally, insert the node.
-            let new_id = slab.vacant_entry().key();
-            slab.insert(Box::new(File {
+            let new_entry = slab.vacant_entry();
+            let new_id = new_entry.key();
+            new_entry.insert(Box::new(File {
                 id: new_id,
                 parent: Some(current_acestor_id),
                 display_name: path_name.clone(),
