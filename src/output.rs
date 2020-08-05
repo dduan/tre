@@ -1,4 +1,4 @@
-use super::formatting::FormattedEntry;
+use super::diagram_formatting::FormattedEntry;
 use atty;
 use lscolors::{self, LsColors, Style};
 use std::env;

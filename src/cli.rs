@@ -16,6 +16,7 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             };
 
             let directories_only = matches.opt_present("d");
+            let output_json = matches.opt_present("j");
             let editor: Option<Option<String>> = if matches.opt_present("e") {
                 Some(matches.opt_str("e"))
             } else {
@@ -31,6 +32,7 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
                 mode: mode,
                 editor: editor,
                 directories_only: directories_only,
+                output_json: output_json,
                 root: root,
             }
         }
@@ -38,6 +40,7 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             mode: Mode::Help,
             editor: None,
             directories_only: false,
+            output_json: false,
             root: None,
         },
     }

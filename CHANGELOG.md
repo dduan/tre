@@ -1,6 +1,7 @@
 # master
 
 - Add '--directotries-only/-d' option, which limits output to only directories.
+- Add '--json/-j' option, which makes tre output JSON instead of the tree diagram.
 
 # 0.3.1
 
