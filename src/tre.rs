@@ -1,5 +1,6 @@
 use crate::file_tree::FileType;
-use crate::formatting;
+use crate::diagram_formatting;
+use crate::json_formatting;
 use crate::output;
 use crate::path_finders;
 use getopts::Options;
@@ -17,6 +18,12 @@ pub fn cli_options() -> Options {
         "d",
         "directories",
         "Only list directories in output.",
+    );
+
+    opts.optflag(
+        "j",
+        "json",
+        "Output JSON instead of tree diagram.",
     );
 
     {
@@ -66,6 +73,7 @@ pub struct RunOption {
     pub editor: Option<Option<String>>,
     pub mode: Mode,
     pub directories_only: bool,
+    pub output_json: bool,
     pub root: Option<String>,
 }
 
@@ -120,19 +128,22 @@ pub fn run(option: RunOption) {
             paths = path_finders::find_all_paths(root, directories_only);
         }
     }
-    let format_result = formatting::format_paths(root, paths);
 
-    let lscolors = LsColors::from_env().unwrap_or_default();
-
-    if let Some(editor) = option.editor {
-        output::print_entries(&format_result, true, &lscolors);
-        let editor = if cfg!(windows) {
-            editor.unwrap_or("".to_string())
-        } else {
-            editor.unwrap_or("$EDITOR".to_string())
-        };
-        output::create_edit_aliases(&editor, &format_result);
+    if option.output_json {
+        println!("{}", json_formatting::format_paths(root, paths));
     } else {
-        output::print_entries(&format_result, false, &lscolors);
+        let format_result = diagram_formatting::format_paths(root, paths);
+        let lscolors = LsColors::from_env().unwrap_or_default();
+        if let Some(editor) = option.editor {
+            output::print_entries(&format_result, true, &lscolors);
+            let editor = if cfg!(windows) {
+                editor.unwrap_or("".to_string())
+            } else {
+                editor.unwrap_or("$EDITOR".to_string())
+            };
+            output::create_edit_aliases(&editor, &format_result);
+        } else {
+            output::print_entries(&format_result, false, &lscolors);
+        }
     }
 }

@@ -37,8 +37,9 @@ pub struct File {
     pub display_name: String,
     pub path: String,
     pub file_type: FileType,
-    data: TypeSpecficData,
+    pub data: TypeSpecficData,
 }
+
 
 impl File {
     pub fn children_count(&self) -> usize {
@@ -99,8 +100,8 @@ impl File {
 }
 
 pub struct FileTree {
-    storage: Slab<Box<File>>,
-    root_id: usize,
+    pub storage: Slab<Box<File>>,
+    pub root_id: usize,
 }
 
 impl FileTree {
