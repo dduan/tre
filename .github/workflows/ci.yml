@@ -11,10 +11,11 @@ jobs:
         action:
           - build
           - test
+          - check-cargo-lock
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Action
-      run: cargo ${{ matrix.action }}
+      run: make ${{ matrix.action }}
 
   ubuntu:
     name: Ubuntu
@@ -24,10 +25,11 @@ jobs:
         action:
           - build
           - test
+          - check-cargo-lock
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Action
-      run: cargo ${{ matrix.action }}
+      run: make ${{ matrix.action }}
 
   Windows:
     runs-on: windows-2019
@@ -36,7 +38,8 @@ jobs:
         action:
           - build
           - test
+          - check-cargo-lock
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Action
-      run: cargo ${{ matrix.action }}
+      run: make ${{ matrix.action }}
