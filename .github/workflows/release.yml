@@ -174,7 +174,9 @@ jobs:
           7z a "$staging.zip" "./target/${{ matrix.target }}/release/tre.exe"
           echo "::set-env name=ASSET::$staging.zip"
         else
-          tar -C "target/${{ matrix.target }}/release" -czf "$staging.tar.gz" tre
+          tar -C "target/${{ matrix.target }}/release" -cf "$staging.tar" tre
+          tar -C "manual" -rf "$staging.tar" tre.1
+          gzip "$staging.tar"
           echo "::set-env name=ASSET::$staging.tar.gz"
         fi
 
