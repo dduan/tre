@@ -1,5 +1,7 @@
 # master
 
+# 0.3.2
+
 - Add '--directotries-only/-d' option, which limits output to only directories.
 - Add '--json/-j' option, which makes tre output JSON instead of the tree diagram.
 - Unix manual is now included as `manual/tre.1`. It maybe distributed along with
