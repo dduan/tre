@@ -35,7 +35,7 @@ pub fn find_non_hidden_paths(root: &str, directories_only: bool) -> Vec<(String,
     let mut result: Vec<(String, FileType)> = Vec::new();
 
     for entry in walker
-        .filter_entry(|e| !is_hidden(e))
+        .filter_entry(|e| !is_hidden(e) || e.path().to_str() == Some(root))
         .filter_map(|e| e.ok())
     {
         if let Ok(meta) = entry.metadata() {
