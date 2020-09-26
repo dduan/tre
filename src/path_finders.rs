@@ -22,12 +22,16 @@ pub fn find_all_paths(root: &str, directories_only: bool) -> Vec<(String, FileTy
     result
 }
 
-fn is_hidden(entry: &DirEntry) -> bool {
+fn is_hidden(name: &str) -> bool {
+    name != "." && name.starts_with(".") && name != ".."
+}
+
+fn should_include(entry: &DirEntry, root: &str) -> bool {
     entry
         .file_name()
         .to_str()
-        .map(|s| s != "." && s.starts_with(".") && s != "..")
-        .unwrap_or(false)
+        .map(|s| !is_hidden(s) || s == root)
+        .unwrap_or(true)
 }
 
 pub fn find_non_hidden_paths(root: &str, directories_only: bool) -> Vec<(String, FileType)> {
@@ -35,7 +39,7 @@ pub fn find_non_hidden_paths(root: &str, directories_only: bool) -> Vec<(String,
     let mut result: Vec<(String, FileType)> = Vec::new();
 
     for entry in walker
-        .filter_entry(|e| !is_hidden(e) || e.path().to_str() == Some(root))
+        .filter_entry(|e| should_include(e, root))
         .filter_map(|e| e.ok())
     {
         if let Ok(meta) = entry.metadata() {

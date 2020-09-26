@@ -1,5 +1,11 @@
 # master
 
+- Hidden directory as the direct input now reveals its content. Previously the
+  input directory is not exempt from the "hiding the hidden directry"
+  functionality unless `-a` is used. Implemented by [JaSpa][] at #55.
+
+[JaSpa]: https://github.com/JaSpa
+
 # 0.3.2
 
 - Add '--directotries-only/-d' option, which limits output to only directories.
