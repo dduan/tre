@@ -1,5 +1,7 @@
 # master
 
+# 0.3.3
+
 - Hidden directory as the direct input now reveals its content. Previously the
   input directory is not exempt from the "hiding the hidden directry"
   functionality unless `-a` is used. Implemented by [JaSpa][] at #55.
