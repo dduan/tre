@@ -11,11 +11,12 @@ jobs:
         action:
           - build
           - test
-          - check-cargo-lock
     steps:
     - uses: actions/checkout@v2
     - name: Action
       run: make ${{ matrix.action }}
+    - name: Check Carge.lock
+      run: git diff --exit-code
 
   ubuntu:
     name: Ubuntu
@@ -25,7 +26,6 @@ jobs:
         action:
           - build
           - test
-          - check-cargo-lock
     steps:
     - uses: actions/checkout@v2
     - name: Action
@@ -38,7 +38,6 @@ jobs:
         action:
           - build
           - test
-          - check-cargo-lock
     steps:
     - uses: actions/checkout@v2
     - name: Action
