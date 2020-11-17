@@ -11,6 +11,10 @@ build:
 test:
 	@cargo test
 
+.PHONY:
+cargo:
+	@cargo publish --dry-run
+
 setup:
 	@rustup default stable
 	@rustup component add rls rust-analysis rust-src

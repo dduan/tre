@@ -11,6 +11,7 @@ jobs:
         action:
           - build
           - test
+          - cargo
     steps:
     - uses: actions/checkout@v2
     - name: Action
@@ -26,6 +27,7 @@ jobs:
         action:
           - build
           - test
+          - cargo
     steps:
     - uses: actions/checkout@v2
     - name: Action
