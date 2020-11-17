@@ -41,6 +41,12 @@ nix-env -i tre-command
 scoop install tre-command
 ```
 
+### Cargo
+
+```
+cargo install tre-command
+```
+
 ### Pre-built executable
 
 Choose an pre-built executable from the [release page][] that fits your
