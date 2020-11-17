@@ -1,5 +1,5 @@
 [package]
-name = "tre"
+name = "tre-command"
 version = "0.3.3"
 authors = ["Daniel Duan <daniel@duan.ca>"]
 edition = "2018"
@@ -21,3 +21,7 @@ walkdir = "2"
 lscolors = "0.7.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[[bin]]
+name = "tre"
+path = "src/main.rs"
