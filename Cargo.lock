@@ -150,7 +150,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tre"
+name = "tre-command"
 version = "0.3.3"
 dependencies = [
  "atty",
