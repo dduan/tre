@@ -1,5 +1,8 @@
 # master
 
+- Add '--limit/-l' option, which limits the maximum diplay depth of the file
+  tree.
+
 # 0.3.3
 
 - Hidden directory as the direct input now reveals its content. Previously the
