@@ -1,5 +1,7 @@
 # master
 
+# 0.3.4
+
 - Add '--limit/-l' option, which limits the maximum diplay depth of the file
   tree.
 
