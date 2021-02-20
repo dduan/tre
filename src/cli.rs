@@ -28,12 +28,15 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
                 Some(matches.free[0].clone())
             };
 
+            let max_depth: Option<usize> = matches.opt_get("l").unwrap_or(None);
+
             RunOption {
                 mode: mode,
                 editor: editor,
                 directories_only: directories_only,
                 output_json: output_json,
                 root: root,
+                max_depth: max_depth,
             }
         }
         Err(_) => RunOption {
@@ -42,6 +45,7 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             directories_only: false,
             output_json: false,
             root: None,
+            max_depth: None,
         },
     }
 }
