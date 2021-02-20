@@ -20,12 +20,6 @@ pub fn cli_options() -> Options {
         "Only list directories in output.",
     );
 
-    opts.optflag(
-        "j",
-        "json",
-        "Output JSON instead of tree diagram.",
-    );
-
     {
         let alias_file_path = if cfg!(windows) {
             r"%TEMP%\tre_aliases_%USERNAME%"
@@ -47,6 +41,19 @@ pub fn cli_options() -> Options {
             "EDITOR",
         );
     }
+    opts.optflag(
+        "j",
+        "json",
+        "Output JSON instead of tree diagram.",
+    );
+
+    opts.optflagopt(
+        "l",
+        "limit",
+        "Limit display depth file tree output.",
+        "DEPTH",
+    );
+
     if !cfg!(windows) {
         opts.optflag(
             "s",
@@ -75,6 +82,7 @@ pub struct RunOption {
     pub directories_only: bool,
     pub output_json: bool,
     pub root: Option<String>,
+    pub max_depth: Option<usize>,
 }
 
 fn print_help() {
@@ -108,6 +116,7 @@ fn print_version() {
 pub fn run(option: RunOption) {
     let root = &option.root.unwrap_or(".".to_string());
     let directories_only = option.directories_only;
+    let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
     let paths: Vec<(String, FileType)>;
     match option.mode {
         Mode::Help => {
@@ -119,13 +128,13 @@ pub fn run(option: RunOption) {
             return;
         }
         Mode::FollowGitIgnore => {
-            paths = path_finders::find_non_git_ignored_paths(root, directories_only);
+            paths = path_finders::find_non_git_ignored_paths(root, directories_only, max_depth);
         }
         Mode::ExcludeHiddenFiles => {
-            paths = path_finders::find_non_hidden_paths(root, directories_only);
+            paths = path_finders::find_non_hidden_paths(root, directories_only, max_depth);
         }
         Mode::ShowAllFiles => {
-            paths = path_finders::find_all_paths(root, directories_only);
+            paths = path_finders::find_all_paths(root, directories_only, max_depth);
         }
     }
 
