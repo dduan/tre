@@ -2,6 +2,8 @@
 .PHONY: check
 check:
 	@cargo check
+	@cargo clippy -- -D warnings
+	@cargo clippy -- --check
 
 .PHONY: build
 build:

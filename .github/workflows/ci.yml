@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         action:
+          - check
           - build
           - test
           - cargo
