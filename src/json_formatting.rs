@@ -1,6 +1,5 @@
 use super::file_tree::{File, FileTree, FileType, TypeSpecficData};
 use serde::Serialize;
-use serde_json;
 
 #[derive(Serialize)]
 struct SerializableTreeFile<'a> {
@@ -32,7 +31,7 @@ enum SerializableTreeNode<'a> {
 }
 
 impl SerializableTreeNode<'_> {
-    pub fn new<'a>(tree: &'a FileTree) -> SerializableTreeNode<'a> {
+    pub fn new(tree: &FileTree) -> SerializableTreeNode {
         SerializableTreeNode::from(tree, &tree.storage[tree.root_id])
     }
 
@@ -48,7 +47,7 @@ impl SerializableTreeNode<'_> {
                     path: &file.path,
                     contents: map
                         .values()
-                        .map(|id| return SerializableTreeNode::from(tree, &tree.storage[*id]))
+                        .map(|id| SerializableTreeNode::from(tree, &tree.storage[*id]))
                         .collect(),
                 }))
             }
@@ -65,7 +64,7 @@ pub fn format_paths(root_path: &str, children: Vec<(String, FileType)>) -> Strin
     match FileTree::new(root_path, children) {
         Some(tree) => {
             let node = SerializableTreeNode::new(&tree);
-            serde_json::to_string_pretty(&node).unwrap_or("{}".to_string())
+            serde_json::to_string_pretty(&node).unwrap_or_else(|_| "{}".to_string())
         }
         None => "{}".to_string(),
     }

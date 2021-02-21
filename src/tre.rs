@@ -55,7 +55,7 @@ pub fn cli_options() -> Options {
     }
     opts.optflag("v", "version", "Show version number.");
     opts.optflag("h", "help", "Show this help message.");
-    return opts;
+    opts
 }
 
 #[derive(Debug, Clone)]
@@ -106,7 +106,7 @@ fn print_version() {
     println!("{}", env!("CARGO_PKG_VERSION"));
 }
 pub fn run(option: RunOption) {
-    let root = &option.root.unwrap_or(".".to_string());
+    let root = &option.root.unwrap_or_else(|| ".".to_string());
     let directories_only = option.directories_only;
     let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
     let paths: Vec<(String, FileType)>;
@@ -138,9 +138,9 @@ pub fn run(option: RunOption) {
         if let Some(editor) = option.editor {
             output::print_entries(&format_result, true, &lscolors);
             let editor = if cfg!(windows) {
-                editor.unwrap_or("".to_string())
+                editor.unwrap_or_else(|| "".to_string())
             } else {
-                editor.unwrap_or("$EDITOR".to_string())
+                editor.unwrap_or_else(|| "$EDITOR".to_string())
             };
             output::create_edit_aliases(&editor, &format_result);
         } else {

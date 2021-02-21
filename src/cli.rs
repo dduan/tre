@@ -1,6 +1,6 @@
 use crate::tre::{self, Mode, RunOption};
 
-pub fn get_run_option(args: &Vec<String>) -> RunOption {
+pub fn get_run_option(args: &[String]) -> RunOption {
     match tre::cli_options().parse(&args[1..]) {
         Ok(matches) => {
             let mode: Mode = if matches.opt_present("v") {
@@ -31,12 +31,12 @@ pub fn get_run_option(args: &Vec<String>) -> RunOption {
             let max_depth: Option<usize> = matches.opt_get("l").unwrap_or(None);
 
             RunOption {
-                mode: mode,
-                editor: editor,
-                directories_only: directories_only,
-                output_json: output_json,
-                root: root,
-                max_depth: max_depth,
+                mode,
+                editor,
+                directories_only,
+                output_json,
+                root,
+                max_depth,
             }
         }
         Err(_) => RunOption {

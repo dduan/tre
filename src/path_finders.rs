@@ -21,7 +21,7 @@ pub fn find_all_paths(
 
             if let Some(path) = entry.path().to_str() {
                 let path = path.to_string();
-                if &path != root {
+                if path != root {
                     result.push((path, FileType::new(meta)))
                 }
             }
@@ -31,7 +31,7 @@ pub fn find_all_paths(
 }
 
 fn is_hidden(name: &str) -> bool {
-    name != "." && name.starts_with(".") && name != ".."
+    name != "." && name.starts_with('.') && name != ".."
 }
 
 fn should_include(entry: &DirEntry, root: &str) -> bool {
@@ -60,7 +60,7 @@ pub fn find_non_hidden_paths(
             }
             if let Some(path) = entry.path().to_str() {
                 let path = path.to_string();
-                if &path != root {
+                if path != root {
                     result.push((path, FileType::new(meta)))
                 }
             }
@@ -91,8 +91,7 @@ pub fn find_non_git_ignored_paths(
         if git_output.status.success() {
             if let Ok(paths_buf) = String::from_utf8(git_output.stdout) {
                 return paths_buf
-                    .split("\n")
-                    .into_iter()
+                    .split('\n')
                     .filter_map(|p| {
                         let path_string = if max_depth != std::usize::MAX {
                             path::Path::new(p)
@@ -106,14 +105,14 @@ pub fn find_non_git_ignored_paths(
                         } else {
                             p.to_string()
                         };
-                        return fs::metadata(&path_string)
+                        fs::metadata(&path_string)
                             .map(|m| (path_string, FileType::new(m)))
-                            .ok();
+                            .ok()
                     })
                     .collect();
             }
         }
     }
 
-    return find_non_hidden_paths(root, directories_only, max_depth);
+    find_non_hidden_paths(root, directories_only, max_depth)
 }
