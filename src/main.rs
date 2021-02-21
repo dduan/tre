@@ -1,8 +1,8 @@
 use std::env;
 
 mod cli;
-mod file_tree;
 mod diagram_formatting;
+mod file_tree;
 mod json_formatting;
 mod output;
 mod path_finders;

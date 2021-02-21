@@ -1,14 +1,22 @@
 use crate::file_tree::FileType;
-use std::{fs,path};
 use std::process::Command;
+use std::{fs, path};
 use walkdir::{DirEntry, WalkDir};
 
-pub fn find_all_paths(root: &str, directories_only: bool, max_depth: usize) -> Vec<(String, FileType)> {
+pub fn find_all_paths(
+    root: &str,
+    directories_only: bool,
+    max_depth: usize,
+) -> Vec<(String, FileType)> {
     let mut result: Vec<(String, FileType)> = Vec::new();
-    for entry in WalkDir::new(root).max_depth(max_depth).into_iter().filter_map(|e| e.ok()) {
+    for entry in WalkDir::new(root)
+        .max_depth(max_depth)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
         if let Ok(meta) = entry.metadata() {
             if directories_only && !meta.is_dir() {
-                continue
+                continue;
             }
 
             if let Some(path) = entry.path().to_str() {
@@ -34,7 +42,11 @@ fn should_include(entry: &DirEntry, root: &str) -> bool {
         .unwrap_or(true)
 }
 
-pub fn find_non_hidden_paths(root: &str, directories_only: bool, max_depth: usize) -> Vec<(String, FileType)> {
+pub fn find_non_hidden_paths(
+    root: &str,
+    directories_only: bool,
+    max_depth: usize,
+) -> Vec<(String, FileType)> {
     let walker = WalkDir::new(root).max_depth(max_depth).into_iter();
     let mut result: Vec<(String, FileType)> = Vec::new();
 
@@ -44,7 +56,7 @@ pub fn find_non_hidden_paths(root: &str, directories_only: bool, max_depth: usiz
     {
         if let Ok(meta) = entry.metadata() {
             if directories_only && !meta.is_dir() {
-                continue
+                continue;
             }
             if let Some(path) = entry.path().to_str() {
                 let path = path.to_string();
@@ -57,7 +69,11 @@ pub fn find_non_hidden_paths(root: &str, directories_only: bool, max_depth: usiz
     result
 }
 
-pub fn find_non_git_ignored_paths(root: &str, directories_only: bool, max_depth: usize) -> Vec<(String, FileType)> {
+pub fn find_non_git_ignored_paths(
+    root: &str,
+    directories_only: bool,
+    max_depth: usize,
+) -> Vec<(String, FileType)> {
     let mut git_command = Command::new("git");
     if directories_only {
         git_command
@@ -79,13 +95,20 @@ pub fn find_non_git_ignored_paths(root: &str, directories_only: bool, max_depth:
                     .into_iter()
                     .filter_map(|p| {
                         let path_string = if max_depth != std::usize::MAX {
-                            path::Path::new(p).components().take(max_depth).collect::<path::PathBuf>().as_path().to_str().unwrap().to_string()
+                            path::Path::new(p)
+                                .components()
+                                .take(max_depth)
+                                .collect::<path::PathBuf>()
+                                .as_path()
+                                .to_str()
+                                .unwrap()
+                                .to_string()
                         } else {
                             p.to_string()
                         };
                         return fs::metadata(&path_string)
                             .map(|m| (path_string, FileType::new(m)))
-                            .ok()
+                            .ok();
                     })
                     .collect();
             }
