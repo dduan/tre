@@ -12,7 +12,7 @@ jobs:
           - check
           - build
           - test
-          - cargo
+          - cargo-publish
     steps:
     - uses: actions/checkout@v2
     - name: Action
@@ -26,9 +26,10 @@ jobs:
     strategy:
       matrix:
         action:
+          - check
           - build
           - test
-          - cargo
+          - cargo-publish
     steps:
     - uses: actions/checkout@v2
     - name: Action
@@ -39,8 +40,10 @@ jobs:
     strategy:
       matrix:
         action:
+          - check
           - build
           - test
+          - cargo-publish
     steps:
     - uses: actions/checkout@v2
     - name: Action
