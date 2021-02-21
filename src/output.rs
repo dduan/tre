@@ -1,5 +1,4 @@
 use super::diagram_formatting::FormattedEntry;
-use atty;
 use lscolors::{self, LsColors, Style};
 use std::env;
 use std::fmt::Display;
@@ -27,7 +26,7 @@ where
     }
 }
 
-pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool, lscolors: &LsColors) {
+pub fn print_entries(entries: &[FormattedEntry], create_alias: bool, lscolors: &LsColors) {
     for (index, entry) in entries.iter().enumerate() {
         if create_alias {
             print!("{}[", entry.prefix);
@@ -43,7 +42,7 @@ pub fn print_entries(entries: &Vec<FormattedEntry>, create_alias: bool, lscolors
             .map(convert_to_color_spec)
             .unwrap_or_default();
         color_print(&entry.name, &spec);
-        print!("\n")
+        println!()
     }
 }
 
@@ -142,11 +141,11 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
 
 #[cfg(not(target_os = "windows"))]
 fn open_alias_file() -> io::Result<File> {
-    let user = env::var("USER").unwrap_or("".to_string());
+    let user = env::var("USER").unwrap_or_else(|_| "".to_string());
     let alias_file = format!("/tmp/tre_aliases_{}", &user);
     let path: PathBuf = [alias_file].iter().collect();
     let file = File::create(&path);
-    if !file.is_ok() {
+    if file.is_err() {
         eprintln!("[tre] failed to open {:?}", path);
     }
 
@@ -154,9 +153,9 @@ fn open_alias_file() -> io::Result<File> {
 }
 
 #[cfg(not(target_os = "windows"))]
-pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
+pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let alias = open_alias_file();
-    if let Some(mut alias_file) = alias.ok() {
+    if let Ok(mut alias_file) = alias {
         for (index, entry) in entries.iter().enumerate() {
             let result = writeln!(
                 &mut alias_file,
@@ -166,7 +165,7 @@ pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
                 entry.path.replace("'", "\\'")
             );
 
-            if !result.is_ok() {
+            if result.is_err() {
                 eprintln!("[tre] failed to write to alias file.");
             }
         }

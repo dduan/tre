@@ -61,7 +61,7 @@ fn format_file(
     result.push(FormattedEntry {
         name: file.display_name.clone(),
         path: file.path.clone(),
-        prefix: prefix,
+        prefix,
         link: file.link(),
     });
 

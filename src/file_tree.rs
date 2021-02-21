@@ -115,8 +115,7 @@ impl FileTree {
                 Component::CurDir => false,
                 _ => true,
             })
-            .collect::<Vec<_>>()
-            .len();
+            .count();
 
         let root = Box::new(File {
             id: root_id,
@@ -133,14 +132,12 @@ impl FileTree {
                 FileType::Link => fs::read_link(&path)
                     .ok()
                     .and_then(|path| path.to_str().map(|x| x.to_string()))
-                    .map(|path| TypeSpecficData::Link(path)),
+                    .map(TypeSpecficData::Link),
                 FileType::Directory => Some(TypeSpecficData::Directory(HashMap::new())),
                 FileType::File => Some(TypeSpecficData::File),
             };
 
-            if data_option.is_none() {
-                return None;
-            }
+            data_option.as_ref()?;
 
             let data = data_option.unwrap();
 
@@ -204,16 +201,16 @@ impl FileTree {
                 id: new_id,
                 parent: Some(current_acestor_id),
                 display_name: path_name.clone(),
-                path: path,
+                path,
                 file_type: meta,
-                data: data,
+                data,
             }));
             slab[current_acestor_id].add_child(&path_name, new_id);
         }
 
         Some(FileTree {
             storage: slab,
-            root_id: root_id,
+            root_id,
         })
     }
 
