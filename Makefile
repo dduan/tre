@@ -14,7 +14,7 @@ test:
 	@cargo test
 
 .PHONY:
-cargo:
+cargo-publish:
 	@cargo publish --dry-run
 
 setup:
