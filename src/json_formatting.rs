@@ -1,6 +1,6 @@
+use super::file_tree::{File, FileTree, FileType, TypeSpecficData};
 use serde::Serialize;
 use serde_json;
-use super::file_tree::{FileTree, File, TypeSpecficData, FileType};
 
 #[derive(Serialize)]
 struct SerializableTreeFile<'a> {
@@ -28,7 +28,7 @@ struct SerializableTreeDirectory<'a> {
 enum SerializableTreeNode<'a> {
     File(SerializableTreeFile<'a>),
     Link(SerializableTreeLink<'a>),
-    Directory(Box<SerializableTreeDirectory<'a>>)
+    Directory(Box<SerializableTreeDirectory<'a>>),
 }
 
 impl SerializableTreeNode<'_> {
@@ -38,29 +38,25 @@ impl SerializableTreeNode<'_> {
 
     fn from<'a>(tree: &'a FileTree, file: &'a File) -> SerializableTreeNode<'a> {
         match &file.data {
-            TypeSpecficData::File => SerializableTreeNode::File(
-                SerializableTreeFile {
+            TypeSpecficData::File => SerializableTreeNode::File(SerializableTreeFile {
+                name: &file.display_name,
+                path: &file.path,
+            }),
+            TypeSpecficData::Directory(map) => {
+                SerializableTreeNode::Directory(Box::new(SerializableTreeDirectory {
                     name: &file.display_name,
                     path: &file.path,
-                }
-            ),
-            TypeSpecficData::Directory(map) => SerializableTreeNode::Directory(
-                Box::new(SerializableTreeDirectory {
-                    name: &file.display_name,
-                    path: &file.path,
-                    contents: map.values().map(|id| {
-                        return SerializableTreeNode::from(tree, &tree.storage[*id])
-                    })
-                    .collect()
-                })
-            ),
-            TypeSpecficData::Link(link) => SerializableTreeNode::Link(
-                SerializableTreeLink {
-                    name: &file.display_name,
-                    path: &file.path,
-                    link: link.clone()
-                }
-            )
+                    contents: map
+                        .values()
+                        .map(|id| return SerializableTreeNode::from(tree, &tree.storage[*id]))
+                        .collect(),
+                }))
+            }
+            TypeSpecficData::Link(link) => SerializableTreeNode::Link(SerializableTreeLink {
+                name: &file.display_name,
+                path: &file.path,
+                link: link.clone(),
+            }),
         }
     }
 }
@@ -71,6 +67,6 @@ pub fn format_paths(root_path: &str, children: Vec<(String, FileType)>) -> Strin
             let node = SerializableTreeNode::new(&tree);
             serde_json::to_string_pretty(&node).unwrap_or("{}".to_string())
         }
-        None => "{}".to_string()
+        None => "{}".to_string(),
     }
 }

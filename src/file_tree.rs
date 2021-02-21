@@ -40,7 +40,6 @@ pub struct File {
     pub data: TypeSpecficData,
 }
 
-
 impl File {
     pub fn children_count(&self) -> usize {
         if let TypeSpecficData::Directory(children) = &self.data {

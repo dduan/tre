@@ -1,5 +1,5 @@
-use crate::file_tree::FileType;
 use crate::diagram_formatting;
+use crate::file_tree::FileType;
 use crate::json_formatting;
 use crate::output;
 use crate::path_finders;
@@ -14,11 +14,7 @@ pub fn cli_options() -> Options {
         "Print all files and directories, including hidden ones.",
     );
 
-    opts.optflag(
-        "d",
-        "directories",
-        "Only list directories in output.",
-    );
+    opts.optflag("d", "directories", "Only list directories in output.");
 
     {
         let alias_file_path = if cfg!(windows) {
@@ -41,11 +37,7 @@ pub fn cli_options() -> Options {
             "EDITOR",
         );
     }
-    opts.optflag(
-        "j",
-        "json",
-        "Output JSON instead of tree diagram.",
-    );
+    opts.optflag("j", "json", "Output JSON instead of tree diagram.");
 
     opts.optflagopt(
         "l",
