@@ -1,5 +1,9 @@
 # master
 
+- Fix a bug where intermediary directories from `git ls-files` don't have
+  correct path, resulting in wrong colors in output, as well as non-functioning
+  editor alias.
+
 # 0.3.4
 
 - Add '--limit/-l' option, which limits the maximum diplay depth of the file
