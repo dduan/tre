@@ -3,6 +3,14 @@ use std::collections::HashMap;
 use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
+fn to_string(component: &Component) -> String {
+    component
+        .clone()
+        .as_os_str()
+        .to_string_lossy()
+        .into_owned()
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum FileType {
     File,
@@ -155,9 +163,7 @@ impl FileTree {
 
             let ancestor = ancestry
                 .pop()
-                .map(|x| x.as_os_str())
-                .and_then(|x| x.to_str())
-                .map(|x| x.to_string());
+                .map(|x| to_string(&x));
 
             if ancestor.is_none() {
                 continue;
@@ -170,11 +176,7 @@ impl FileTree {
             let mut current_ancestor_path = PathBuf::new();
             current_ancestor_path.push(&root_path);
             for ancestor_name in ancestry {
-                let display_name = ancestor_name
-                    .clone()
-                    .as_os_str()
-                    .to_string_lossy()
-                    .into_owned();
+                let display_name = to_string(&ancestor_name);
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
