@@ -176,13 +176,13 @@ impl FileTree {
             let mut current_ancestor_path = PathBuf::new();
             current_ancestor_path.push(&root_path);
             for ancestor_name in ancestry {
+                current_ancestor_path.push(ancestor_name);
                 let display_name = to_string(&ancestor_name);
                 if let Some(child_key) = slab[current_acestor_id].child_key(&display_name) {
                     current_acestor_id = child_key;
                 } else {
                     let new_entry = slab.vacant_entry();
                     let new_id = new_entry.key();
-                    current_ancestor_path.push(&display_name);
                     new_entry.insert(Box::new(File {
                         id: new_id,
                         parent: Some(current_acestor_id),
@@ -199,11 +199,16 @@ impl FileTree {
             // Finally, insert the node.
             let new_entry = slab.vacant_entry();
             let new_id = new_entry.key();
+            let path_with_root = Path::new(&root_path)
+                .join(&path)
+                .to_str()
+                .map(|x| x.to_string())
+                .unwrap_or_else(|| path);
             new_entry.insert(Box::new(File {
                 id: new_id,
                 parent: Some(current_acestor_id),
                 display_name: path_name.clone(),
-                path,
+                path: path_with_root,
                 file_type: meta,
                 data,
             }));
@@ -231,6 +236,7 @@ impl FileTree {
 
 #[cfg(test)]
 mod test {
+    use std::path::Path;
     use super::{FileTree, FileType, TypeSpecficData};
 
     #[test]
@@ -251,19 +257,23 @@ mod test {
             let a_id = root_chilren.get("a").expect("a exists");
             let a = tree.get(*a_id);
             assert!(a.is_file());
+            assert_eq!(Path::new(&a.path), Path::new("./a"));
             let b_id = root_chilren.get("b").expect("b exists");
             let b = tree.get(*b_id);
             assert!(b.is_dir());
+            assert_eq!(Path::new(&b.path), Path::new("./b"));
             if let TypeSpecficData::Directory(b_children) = &b.data {
                 assert_eq!(b_children.len(), 1);
                 let c_id = b_children.get("c").expect("c exists");
                 let c = tree.get(*c_id);
                 assert!(c.is_dir());
+                assert_eq!(Path::new(&c.path), Path::new("./b/c"));
                 if let TypeSpecficData::Directory(c_children) = &c.data {
                     assert_eq!(c_children.len(), 1);
                     let d_id = c_children.get("d").expect("d exists");
                     let d = tree.get(*d_id);
                     assert!(d.is_file());
+                    assert_eq!(Path::new(&d.path), Path::new("./b/c/d"));
                 }
             }
         }

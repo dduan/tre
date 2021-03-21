@@ -111,6 +111,9 @@ mod test {
             ],
         );
 
+        let a_path = format!(".{}a", path::MAIN_SEPARATOR);
+        let b_path = format!(".{}b", path::MAIN_SEPARATOR);
+        let bc_path = format!(".{}b{}c", path::MAIN_SEPARATOR, path::MAIN_SEPARATOR);
         let variant0 = vec![
             FormattedEntry {
                 name: ".".to_string(),
@@ -120,19 +123,19 @@ mod test {
             },
             FormattedEntry {
                 name: "a".to_string(),
-                path: "a".to_string(),
+                path: a_path.clone(),
                 prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 name: "b".to_string(),
-                path: format!(".{}b", path::MAIN_SEPARATOR),
+                path: b_path.clone(),
                 prefix: "└── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 name: "c".to_string(),
-                path: format!("b{}c", path::MAIN_SEPARATOR),
+                path: bc_path.clone(),
                 prefix: "    └── ".to_string(),
                 link: None,
             },
@@ -147,19 +150,19 @@ mod test {
             },
             FormattedEntry {
                 name: "b".to_string(),
-                path: format!(".{}b", path::MAIN_SEPARATOR),
+                path: b_path.clone(),
                 prefix: "├── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 name: "c".to_string(),
-                path: format!("b{}c", path::MAIN_SEPARATOR),
+                path: bc_path.clone(),
                 prefix: "│   └── ".to_string(),
                 link: None,
             },
             FormattedEntry {
                 name: "a".to_string(),
-                path: "a".to_string(),
+                path: a_path.clone(),
                 prefix: "└── ".to_string(),
                 link: None,
             },
