@@ -1,5 +1,7 @@
 # master
 
+# 0.3.5
+
 - Fix a bug where intermediary directories from `git ls-files` don't have
   correct path, resulting in wrong colors in output, as well as non-functioning
   editor alias.
