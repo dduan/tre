@@ -1,5 +1,7 @@
 # master
 
+# 0.3.6
+
 - Fixed a bug when root isn't ".", the paths for sub-directories are wrong.
 
 # 0.3.5
