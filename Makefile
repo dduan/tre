@@ -13,10 +13,14 @@ build:
 test:
 	@cargo test
 
-.PHONY:
+.PHONY: cargo-publish
 cargo-publish:
 	@cargo publish --dry-run
 
 setup:
 	@rustup default stable
 	@rustup component add rls rust-analysis rust-src
+
+.PHONY: check-version
+check-version:
+	@scripts/check-version.py
