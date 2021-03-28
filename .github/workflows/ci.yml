@@ -30,6 +30,7 @@ jobs:
           - build
           - test
           - cargo-publish
+          - check-version
     steps:
     - uses: actions/checkout@v2
     - name: Action

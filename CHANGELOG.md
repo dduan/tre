@@ -1,4 +1,4 @@
-# master
+# main
 
 # 0.3.6
 
