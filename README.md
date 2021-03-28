@@ -47,6 +47,17 @@ scoop install tre-command
 cargo install tre-command
 ```
 
+### Arch Linux
+
+Currently, tre is available on [AUR][]. You can use your favorite tool to
+install from there. For example, using `yay`:
+
+```
+yay tre-command
+```
+
+[AUR]: https://aur.archlinux.org/packages/tre-command/
+
 ### Pre-built executable
 
 Choose an pre-built executable from the [release page][] that fits your
