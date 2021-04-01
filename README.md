@@ -58,6 +58,14 @@ yay tre-command
 
 [AUR]: https://aur.archlinux.org/packages/tre-command/
 
+### NetBSD
+
+NetBSD 9.1 users can install tre from bleeding edge pkgsrc:
+
+```
+pkgin install tre-command
+```
+
 ### Pre-built executable
 
 Choose an pre-built executable from the [release page][] that fits your
