@@ -35,7 +35,7 @@ Tre is available in the following package managers.
 
 _The commands above are basic instructions. Use your favorite alternatives if
 you have one. For example, use a config file for Nix; or other method to install
-from AUR, etc._
+from AUR; pkgsrc can be use on OSes other than NetBSD etc._
 
 ### Pre-built executable
 
