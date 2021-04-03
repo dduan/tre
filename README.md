@@ -31,7 +31,7 @@ Tre is available in the following package managers.
 | Scoop / Windows                      | `scoop install tre-command`  |
 | Cargo                                | `cargo install tre-command`  |
 | AUR / Arch Linux                     | `yay tre-command`            |
-| pkgsrc (bleading edge) / NetBSD 9.1+ | `pkgin install tre-command`  |
+| pkgsrc (bleeding edge) / NetBSD 9.1+ | `pkgin install tre-command`  |
 
 _The commands above are basic instructions. Use your favorite alternatives if
 you have one. For example, use a config file for Nix; or other method to install
