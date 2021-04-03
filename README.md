@@ -20,51 +20,22 @@ the [LS_COLORS][] environment variable (with a set of defaults values).
 
 ## Install
 
-### Homebrew or Linuxbrew
+#### Via a package manager
 
-```
-brew install tre-command
-```
+Tre is available in the following package managers.
 
-### Nix
+| Manager / OS                         | Command                      |
+| ------------------------------------ | ---------------------------- |
+| Homebrew / macOS                     | `brew install tre-command`   |
+| Nix / NixOS                          | `nix-env -i tre-command`     |
+| Scoop / Windows                      | `scoop install tre-command`  |
+| Cargo                                | `cargo install tre-command`  |
+| AUR / Arch Linux                     | `yay tre-command`            |
+| pkgsrc (bleading edge) / NetBSD 9.1+ | `pkgin install tre-command`  |
 
-`tre` is available in the official nixpkgs channel as `tre-command`. You can use
-it with your favorite Nix-y way. For example:
-
-```
-nix-env -i tre-command
-```
-
-### Windows (Scoop)
-
-```
-scoop install tre-command
-```
-
-### Cargo
-
-```
-cargo install tre-command
-```
-
-### Arch Linux
-
-Currently, tre is available on [AUR][]. You can use your favorite tool to
-install from there. For example, using `yay`:
-
-```
-yay tre-command
-```
-
-[AUR]: https://aur.archlinux.org/packages/tre-command/
-
-### NetBSD
-
-NetBSD 9.1 users can install tre from bleeding edge pkgsrc:
-
-```
-pkgin install tre-command
-```
+_The commands above are basic instructions. Use your favorite alternatives if
+you have one. For example, use a config file for Nix; or other method to install
+from AUR, etc._
 
 ### Pre-built executable
 
