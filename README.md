@@ -1,20 +1,18 @@
 # tre
 
-A replacement for `tree` command that uses `git ls-files` as source of file when
-possible.
+A modern alternative to the `tree` command that:
 
-_tre_ can also create shell aliases that, when executed, opens the file
-associated with it with the default editor. Here's that function in action:
+* lists directory structure in a tree-like diagram, like the classics.
+* skips ignored files in git repositories per `.gitignore` setting.
+* creates shell aliases for each listing that opens the files for you.
+* output in colors, respecting [LS_COLORS][] settings when they exist.
+
+Command aliasing demo:
 
 ![Aliasing In Action](alias_demo.gif)
 
 … in case you missed it: "22" is listed in front of "README.md" and typing "e22"
 opened the file! See [how to set this up](#editor-aliasing).
-
-Runs on Unix as well as Windows PowerShell.
-
-The colors of the output for different file types/diretory, etc, is defined by
-the [LS_COLORS][] environment variable (with a set of defaults values).
 
 [LS_COLORS]: https://man7.org/linux/man-pages/man5/dir_colors.5.html
 
