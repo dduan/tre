@@ -11,7 +11,7 @@ Command aliasing demo:
 
 ![Aliasing In Action](alias_demo.gif)
 
-… in case you missed it: "22" is listed in front of "README.md" and typing "e22"
+… in case you missed it: `[8]` is shown in front of "README.md" and typing `e8`
 opened the file! See [how to set this up](#editor-aliasing).
 
 [LS_COLORS]: https://man7.org/linux/man-pages/man5/dir_colors.5.html
