@@ -147,6 +147,47 @@ call %TEMP%\tre_aliases_%USERNAME%.bat
 
 … instead of configuring your system (if you are _that_ patient!).
 
+## Everything else
+
+Here's the output from `tre -h`, showing all available options provided by tre:
+
+```
+Usage: tre [path] [option]
+
+Print files, directories, and symlinks in tree form.
+
+Hidden files and those configured to be ignored by git will be (optionally)
+ignored.
+
+With correct configuration, each displayed file can have a shell alias created
+for it, which opens the file in the default editor or an otherwise specified
+command.
+
+Path:
+    The root path whose content is to be listed. Defaults to ".".
+
+Options:
+    -a, --all           Print all files and directories, including hidden
+                        ones.
+    -d, --directories   Only list directories in output.
+    -e, --editor [EDITOR]
+                        Create aliases for each displayed result in
+                        /tmp/tre_aliases_$USER and add a number in front of
+                        file name to indicate the alias name. For example, a
+                        number "42" means an shell alias "e42" has been
+                        created. Running "e42" will cause the associated file
+                        or directory to be open with $EDITOR, or a command
+                        specified along with this command.
+    -j, --json          Output JSON instead of tree diagram.
+    -l, --limit [DEPTH] Limit display depth file tree output.
+    -s, --simple        Use normal print despite gitignore settings. '-a' has
+                        higher priority.
+    -v, --version       Show version number.
+    -h, --help          Show this help message.
+
+Project site: https://github.com/dduan/tre
+```
+
 ## License
 
 MIT. See `LICENSE.md`.
