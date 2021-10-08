@@ -100,42 +100,36 @@ fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> {
 #[cfg(target_os = "windows")]
 pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
-    match powershell_alias {
-        Ok(mut alias_file) => {
-            for (index, entry) in entries.iter().enumerate() {
-                let editor = if editor.is_empty() { "Start-Process" } else { editor };
-                let result = writeln!(
-                    &mut alias_file,
-                    "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
-                    index, editor, entry.path, index, editor, entry.path,
-                );
+    if let Ok(mut alias_file) = powershell_alias {
+        for (index, entry) in entries.iter().enumerate() {
+            let editor = if editor.is_empty() { "Start-Process" } else { editor };
+            let result = writeln!(
+                &mut alias_file,
+                "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
+                index, editor, entry.path, index, editor, entry.path,
+            );
 
-                if result.is_err() {
-                    eprintln!("[tre] failed to write to alias file.");
-                }
+            if result.is_err() {
+                eprintln!("[tre] failed to write to alias file.");
             }
         }
-        Err(_) => ()
     }
 
 
     let cmd_alias = open_alias_file_with_suffix("bat");
-    match cmd_alias {
-        Ok(mut alias_file) => {
-            for (index, entry) in entries.iter().enumerate() {
-                let editor = if editor.is_empty() { "START" } else { editor };
-                let result = writeln!(
-                    &mut alias_file,
-                    "doskey /exename=cmd.exe e{}={} {}",
-                    index, editor, entry.path,
-                );
+    if let Ok(mut alias_file) = cmd_alias {
+        for (index, entry) in entries.iter().enumerate() {
+            let editor = if editor.is_empty() { "START" } else { editor };
+            let result = writeln!(
+                &mut alias_file,
+                "doskey /exename=cmd.exe e{}={} {}",
+                index, editor, entry.path,
+            );
 
-                if result.is_err() {
-                    eprintln!("[tre] failed to write to alias file.");
-                }
+            if result.is_err() {
+                eprintln!("[tre] failed to write to alias file.");
             }
         }
-        Err(_) => ()
     }
 }
 
