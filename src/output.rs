@@ -15,7 +15,7 @@ where
         let stdout = BufferWriter::stdout(ColorChoice::Auto);
         let mut buffer = stdout.buffer();
         buffer
-            .set_color(&color)
+            .set_color(color)
             .and_then(|_| write!(&mut buffer, "{}", text))
             .and_then(|_| buffer.reset())
             .and_then(|_| stdout.print(&buffer))
@@ -65,11 +65,11 @@ fn convert_to_color_spec(style: &Style) -> ColorSpec {
     let mut spec = ColorSpec::new();
 
     if let Some(color) = &style.foreground {
-        spec.set_fg(Some(convert_color(&color)));
+        spec.set_fg(Some(convert_color(color)));
     }
 
     if let Some(color) = &style.background {
-        spec.set_bg(Some(convert_color(&color)));
+        spec.set_bg(Some(convert_color(color)));
     }
 
     spec.set_bold(style.font_style.bold);
@@ -83,14 +83,14 @@ fn convert_to_color_spec(style: &Style) -> ColorSpec {
 fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> {
     let file_name = format!(
         "tre_aliases_{}.{}",
-        env::var("USERNAME").unwrap_or("".to_string()),
+        env::var("USERNAME").unwrap_or_else(|_| "".to_string()),
         suffix
     );
-    let home = env::var("HOME").unwrap_or(r".".to_string());
+    let home = env::var("HOME").unwrap_or_else(|_| r".".to_string());
     let tmp = env::var("TEMP").unwrap_or(home);
     let path: PathBuf = [tmp, file_name].iter().collect();
     let file = File::create(&path);
-    if !file.is_ok() {
+    if file.is_err() {
         eprintln!("[tre] failed to open {:?}", path);
     }
 
@@ -98,41 +98,35 @@ fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> {
 }
 
 #[cfg(target_os = "windows")]
-pub fn create_edit_aliases(editor: &str, entries: &Vec<FormattedEntry>) {
+pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
-    if let Some(mut alias_file) = powershell_alias.ok() {
+    if let Ok(mut alias_file) = powershell_alias {
         for (index, entry) in entries.iter().enumerate() {
-            let editor = format!(
-                "{}",
-                if editor.is_empty() {
-                    "Start-Process"
-                } else {
-                    editor
-                }
-            );
+            let editor = if editor.is_empty() { "Start-Process" } else { editor };
             let result = writeln!(
                 &mut alias_file,
                 "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
                 index, editor, entry.path, index, editor, entry.path,
             );
 
-            if !result.is_ok() {
+            if result.is_err() {
                 eprintln!("[tre] failed to write to alias file.");
             }
         }
     }
 
+
     let cmd_alias = open_alias_file_with_suffix("bat");
-    if let Some(mut alias_file) = cmd_alias.ok() {
+    if let Ok(mut alias_file) = cmd_alias {
         for (index, entry) in entries.iter().enumerate() {
-            let editor = format!("{}", if editor.is_empty() { "START" } else { editor });
+            let editor = if editor.is_empty() { "START" } else { editor };
             let result = writeln!(
                 &mut alias_file,
                 "doskey /exename=cmd.exe e{}={} {}",
                 index, editor, entry.path,
             );
 
-            if !result.is_ok() {
+            if result.is_err() {
                 eprintln!("[tre] failed to write to alias file.");
             }
         }
