@@ -115,6 +115,7 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
                 }
             }
         }
+        Err(_) => ()
     }
 
 
@@ -134,6 +135,7 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
                 }
             }
         }
+        Err(_) => ()
     }
 }
 
