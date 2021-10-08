@@ -4,8 +4,7 @@ use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
 fn to_string(component: &Component) -> String {
-    component
-        .clone()
+    (*component)
         .as_os_str()
         .to_string_lossy()
         .into_owned()
@@ -119,10 +118,7 @@ impl FileTree {
 
         let root_prefix_len: usize = Path::new(root_path)
             .components()
-            .filter(|c| match c {
-                Component::CurDir => false,
-                _ => true,
-            })
+            .filter(|c| !matches!(c, Component::CurDir))
             .count();
 
         let root = Box::new(File {
@@ -151,13 +147,7 @@ impl FileTree {
 
             let mut ancestry: Vec<Component> = Path::new(&path)
                 .components()
-                .filter(|c| {
-                    if let Component::CurDir = c {
-                        false
-                    } else {
-                        true
-                    }
-                })
+                .filter(|c| !matches!(c, Component::CurDir))
                 .skip(root_prefix_len)
                 .collect();
 
@@ -203,7 +193,7 @@ impl FileTree {
                 id: new_id,
                 parent: Some(current_acestor_id),
                 display_name: path_name.clone(),
-                path: path,
+                path,
                 file_type: meta,
                 data,
             }));

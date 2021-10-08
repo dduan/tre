@@ -15,7 +15,7 @@ where
         let stdout = BufferWriter::stdout(ColorChoice::Auto);
         let mut buffer = stdout.buffer();
         buffer
-            .set_color(&color)
+            .set_color(color)
             .and_then(|_| write!(&mut buffer, "{}", text))
             .and_then(|_| buffer.reset())
             .and_then(|_| stdout.print(&buffer))
@@ -65,11 +65,11 @@ fn convert_to_color_spec(style: &Style) -> ColorSpec {
     let mut spec = ColorSpec::new();
 
     if let Some(color) = &style.foreground {
-        spec.set_fg(Some(convert_color(&color)));
+        spec.set_fg(Some(convert_color(color)));
     }
 
     if let Some(color) = &style.background {
-        spec.set_bg(Some(convert_color(&color)));
+        spec.set_bg(Some(convert_color(color)));
     }
 
     spec.set_bold(style.font_style.bold);

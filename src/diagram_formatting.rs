@@ -57,7 +57,7 @@ fn format_file(
     format_history: &mut HashMap<usize, usize>,
     result: &mut Vec<FormattedEntry>,
 ) {
-    let prefix = make_prefix(tree, file, &format_history);
+    let prefix = make_prefix(tree, file, format_history);
     result.push(FormattedEntry {
         name: file.display_name.clone(),
         path: file.path.clone(),
