@@ -101,7 +101,7 @@ fn open_alias_file_with_suffix(suffix: &str) -> io::Result<File> {
 pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     match powershell_alias {
-        Some(mut alias_file) => {
+        Ok(mut alias_file) => {
             for (index, entry) in entries.iter().enumerate() {
                 let editor = if editor.is_empty() { "Start-Process" } else { editor };
                 let result = writeln!(
@@ -120,7 +120,7 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
 
     let cmd_alias = open_alias_file_with_suffix("bat");
     match cmd_alias {
-        Some(mut alias_file) => {
+        Ok(mut alias_file) => {
             for (index, entry) in entries.iter().enumerate() {
                 let editor = if editor.is_empty() { "START" } else { editor };
                 let result = writeln!(
