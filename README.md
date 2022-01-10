@@ -29,7 +29,7 @@ Tre is available in the following package managers.
 | Nix / NixOS          | `nix-env -i tre-command`     |
 | Scoop / Windows      | `scoop install tre-command`  |
 | Cargo                | `cargo install tre-command`  |
-| AUR / Arch Linux     | `yay tre-command`            |
+| AUR / Arch Linux     | `yay -S tre-command`         |
 | pkgsrc / NetBSD 9.1+ | `pkgin install tre-command`  |
 
 _The commands above are basic instructions. Use your favorite alternatives if
