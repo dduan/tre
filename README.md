@@ -30,7 +30,7 @@ Tre is available in the following package managers.
 | Cargo                | `cargo install tre-command`  |
 | AUR / Arch Linux     | `yay -S tre-command`         |
 | pkgsrc / NetBSD 9.1+ | `pkgin install tre-command`  |
-| Nix / NixOS          | `nix-env -i tre-command`     |
+| Nixpkgs / NixOS      | Use `tre-command`            |
 | Nix flake            | Use `github:dduan/tre`       |
 
 _The commands above are basic instructions. Use your favorite alternatives if
