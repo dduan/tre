@@ -3,7 +3,17 @@ name: Continuous Integration
 on: [push]
 
 jobs:
-  macos:
+  Nix:
+    name: Nix
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v15
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - run: nix build
+
+  macOS:
     name: macOS
     runs-on: macOS-latest
     strategy:
@@ -20,7 +30,7 @@ jobs:
     - name: Check Carge.lock
       run: git diff --exit-code
 
-  ubuntu:
+  Ubuntu:
     name: Ubuntu
     runs-on: ubuntu-latest
     strategy:
