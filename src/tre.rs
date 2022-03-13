@@ -109,8 +109,7 @@ pub fn run(option: RunOption) {
     let root = &option.root.unwrap_or_else(|| ".".to_string());
     let directories_only = option.directories_only;
     let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
-    let paths: Vec<(String, FileType)>;
-    match option.mode {
+    let paths: Vec<(String, FileType)> = match option.mode {
         Mode::Help => {
             print_help();
             return;
@@ -120,15 +119,13 @@ pub fn run(option: RunOption) {
             return;
         }
         Mode::FollowGitIgnore => {
-            paths = path_finders::find_non_git_ignored_paths(root, directories_only, max_depth);
+            path_finders::find_non_git_ignored_paths(root, directories_only, max_depth)
         }
         Mode::ExcludeHiddenFiles => {
-            paths = path_finders::find_non_hidden_paths(root, directories_only, max_depth);
+            path_finders::find_non_hidden_paths(root, directories_only, max_depth)
         }
-        Mode::ShowAllFiles => {
-            paths = path_finders::find_all_paths(root, directories_only, max_depth);
-        }
-    }
+        Mode::ShowAllFiles => path_finders::find_all_paths(root, directories_only, max_depth),
+    };
 
     if option.output_json {
         println!("{}", json_formatting::format_paths(root, paths));

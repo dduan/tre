@@ -156,7 +156,7 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
                 "alias e{}=\"eval '{} \\\"{}\\\"'\"",
                 index,
                 editor,
-                entry.path.replace("'", "\\'")
+                entry.path.replace('\'', "\\'")
             );
 
             if result.is_err() {
