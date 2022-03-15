@@ -26,7 +26,9 @@
         defaultPackage = packages.tre-command;
         devShell = pkgs.mkShell {
           buildInputs = [
+            cargo
             rust-analyzer
+            rustc
           ];
         };
       });
