@@ -25,6 +25,7 @@ Tre is available in the following package managers.
 | Manager / OS         | Command                      |
 | -------------------- | ---------------------------- |
 | Homebrew / macOS     | `brew install tre-command`   |
+| MacPorts / macOS     | `port install tre-tree`      |
 | Debian (testing)     | `apt install tre-command`    |
 | Scoop / Windows      | `scoop install tre-command`  |
 | Cargo                | `cargo install tre-command`  |
