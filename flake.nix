@@ -9,11 +9,12 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       with nixpkgs.legacyPackages.${system};
+      let info = (fromTOML (builtins.readFile ./Cargo.toml)).package; in
       rec {
         packages = flake-utils.lib.flattenTree {
-          tre-command = rustPlatform.buildRustPackage rec {
-            pname = "tre-command";
-            version = "0.3.6";
+          ${info.name} = rustPlatform.buildRustPackage rec {
+            pname = info.name;
+            version = info.version;
             src = ./.;
             cargoSha256 = "1f7yhnbgccqmz8hpc1xdv97j53far6d5p5gqvq6xxaqq9irf9bgj";
             lockFile = ./Cargo.lock;
@@ -23,7 +24,7 @@
             '';
           };
         };
-        defaultPackage = packages.tre-command;
+        defaultPackage = packages.${info.name};
         devShell = pkgs.mkShell {
           buildInputs = [
             cargo
