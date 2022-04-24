@@ -10,7 +10,7 @@ readme = "README.md"
 homepage = "https://github.com/dduan/tre"
 repository = "https://github.com/dduan/tre"
 exclude = ["/.github/*", "alias_demo.gif", "flake.nix", "flake.lock", "scripts/*"]
-keywords = ["cli"]
+keywords = ["cli", "tool", "filesystem"]
 categories = ["command-line-utilities"]
 
 [dependencies]
