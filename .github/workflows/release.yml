@@ -69,7 +69,7 @@ jobs:
       RUST_BACKTRACE: 1
     strategy:
       matrix:
-        build: [linux, linux-arm, macos, win-msvc, win-gnu, win32-msvc]
+        build: [linux, linux-arm, macos, macos-arm, win-msvc, win-gnu, win32-msvc]
         include:
         - build: linux
           os: ubuntu-18.04
@@ -83,6 +83,10 @@ jobs:
           os: macos-latest
           rust: stable
           target: x86_64-apple-darwin
+        - build: macos-arm
+          os: macos-latest
+          rust: stable
+          target: aarch64-apple-darwin
         - build: win-msvc
           os: windows-2019
           rust: stable
@@ -150,7 +154,7 @@ jobs:
       run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
 
     - name: Strip release binary (linux and macos)
-      if: matrix.build == 'linux' || matrix.build == 'macos'
+      if: matrix.build == 'linux' || matrix.build == 'macos' || matrix.build == 'macos-arm'
       run: strip "target/${{ matrix.target }}/release/tre"
 
     - name: Strip release binary (arm)

@@ -1,5 +1,8 @@
 # main
 
+- Add M1 builds to release.
+- Support installing from Nix flake.
+
 # 0.3.6
 
 - Fixed a bug when root isn't ".", the paths for sub-directories are wrong.
