@@ -191,6 +191,10 @@ Options:
 Project site: https://github.com/dduan/tre
 ```
 
+If you like the editor aliasing feature, you may want to check out [ea][].
+
+[ea]: https://github.com/dduan/ea
+
 ## License
 
 MIT. See `LICENSE.md`.
