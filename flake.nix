@@ -28,8 +28,11 @@
         devShell = pkgs.mkShell {
           buildInputs = [
             cargo
+            clippy
             rust-analyzer
             rustc
+          ] ++ pkgs.lib.lists.optionals stdenv.isDarwin [
+            libiconv
           ];
         };
       });

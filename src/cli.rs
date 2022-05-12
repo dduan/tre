@@ -1,4 +1,5 @@
 use crate::tre::{self, Mode, RunOption};
+use regex::Regex;
 
 pub fn get_run_option(args: &[String]) -> RunOption {
     match tre::cli_options().parse(&args[1..]) {
@@ -30,6 +31,12 @@ pub fn get_run_option(args: &[String]) -> RunOption {
 
             let max_depth: Option<usize> = matches.opt_get("l").unwrap_or(None);
 
+            let exclude_patterns = matches
+                .opt_strs("E")
+                .iter()
+                .map(|s| Regex::new(s).expect(""))
+                .collect();
+
             RunOption {
                 mode,
                 editor,
@@ -37,6 +44,7 @@ pub fn get_run_option(args: &[String]) -> RunOption {
                 output_json,
                 root,
                 max_depth,
+                exclude_patterns,
             }
         }
         Err(_) => RunOption {
@@ -46,6 +54,7 @@ pub fn get_run_option(args: &[String]) -> RunOption {
             output_json: false,
             root: None,
             max_depth: None,
+            exclude_patterns: [].to_vec(),
         },
     }
 }
