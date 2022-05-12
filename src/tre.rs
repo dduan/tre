@@ -5,6 +5,7 @@ use crate::output;
 use crate::path_finders;
 use getopts::Options;
 use lscolors::LsColors;
+use regex::Regex;
 
 pub fn cli_options() -> Options {
     let mut opts = Options::new();
@@ -53,8 +54,17 @@ pub fn cli_options() -> Options {
             "Use normal print despite gitignore settings. '-a' has higher priority.",
         );
     }
+
+    opts.optmulti(
+        "E",
+        "exclude",
+        "Exclude paths matching a regex pattern. Repeatable.",
+        "PATTERN"
+    );
+
     opts.optflag("v", "version", "Show version number.");
     opts.optflag("h", "help", "Show this help message.");
+
     opts
 }
 
@@ -75,6 +85,7 @@ pub struct RunOption {
     pub output_json: bool,
     pub root: Option<String>,
     pub max_depth: Option<usize>,
+    pub exclude_patterns: Vec<Regex>
 }
 
 fn print_help() {
@@ -106,7 +117,7 @@ fn print_version() {
     println!("{}", env!("CARGO_PKG_VERSION"));
 }
 pub fn run(option: RunOption) {
-    let root = &option.root.unwrap_or_else(|| ".".to_string());
+    let root = &option.root.clone().unwrap_or_else(|| ".".to_string());
     let directories_only = option.directories_only;
     let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
     let paths: Vec<(String, FileType)> = match option.mode {
@@ -125,6 +136,18 @@ pub fn run(option: RunOption) {
             path_finders::find_non_hidden_paths(root, directories_only, max_depth)
         }
         Mode::ShowAllFiles => path_finders::find_all_paths(root, directories_only, max_depth),
+    };
+
+    let paths = if option.exclude_patterns.is_empty() {
+        paths
+    } else {
+        paths
+            .into_iter()
+            .filter(|(path, _)| {
+                let mut pattern_iters = option.exclude_patterns.iter();
+                !pattern_iters.any(|p| p.is_match(path))
+            })
+            .collect()
     };
 
     if option.output_json {

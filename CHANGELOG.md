@@ -2,6 +2,7 @@
 
 - Add M1 builds to release.
 - Support installing from Nix flake.
+- Add `-E/--exclude PATTERN` option to exclude paths from results.
 
 # 0.3.6
 
