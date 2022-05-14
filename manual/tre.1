@@ -52,6 +52,12 @@ Use normal print despite gitignore settings. '-a' has higher priority.
 Exclude paths matching a regex pattern. Repeatable.
 
 .TP
+\fB\-e\fR, \fB\-\-color\fR \fIWHEN\fR
+When to color the output. Choose from \fIautomatic\fR, \fIalways\fR, or \fInever\fR.
+\fIautomatic\fR means when printing to a terminal,
+tre will include colors; otherwise it will disable colors.
+
+.TP
 \fB\-v\fR, \fB\-\-version\fR
 Show version number.
 

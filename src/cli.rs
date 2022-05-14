@@ -1,4 +1,4 @@
-use crate::tre::{self, Mode, RunOption};
+use crate::tre::{self, Coloring, Mode, RunOption};
 use regex::Regex;
 
 pub fn get_run_option(args: &[String]) -> RunOption {
@@ -37,6 +37,17 @@ pub fn get_run_option(args: &[String]) -> RunOption {
                 .map(|s| Regex::new(s).expect(""))
                 .collect();
 
+            let color_string: Option<String> = matches
+                .opt_get("c")
+                .unwrap_or(None)
+                .map(|s: String| s.to_lowercase());
+
+            let coloring: Coloring = match color_string.as_deref() {
+                Some("always") => Coloring::Always,
+                Some("never") => Coloring::Never,
+                _ => Coloring::Automatic,
+            };
+
             RunOption {
                 mode,
                 editor,
@@ -45,6 +56,7 @@ pub fn get_run_option(args: &[String]) -> RunOption {
                 root,
                 max_depth,
                 exclude_patterns,
+                coloring,
             }
         }
         Err(_) => RunOption {
@@ -55,6 +67,7 @@ pub fn get_run_option(args: &[String]) -> RunOption {
             root: None,
             max_depth: None,
             exclude_patterns: [].to_vec(),
+            coloring: Coloring::Automatic,
         },
     }
 }

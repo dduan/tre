@@ -59,7 +59,14 @@ pub fn cli_options() -> Options {
         "E",
         "exclude",
         "Exclude paths matching a regex pattern. Repeatable.",
-        "PATTERN"
+        "PATTERN",
+    );
+
+    opts.optflagopt(
+        "c",
+        "color",
+        "When to color the output (automatic, always, or never). `automatic` means when printing to a terminal, tre will include colors; otherwise it will disable colors.",
+        "WHEN",
     );
 
     opts.optflag("v", "version", "Show version number.");
@@ -78,6 +85,13 @@ pub enum Mode {
 }
 
 #[derive(Debug, Clone)]
+pub enum Coloring {
+    Automatic,
+    Always,
+    Never,
+}
+
+#[derive(Debug, Clone)]
 pub struct RunOption {
     pub editor: Option<Option<String>>,
     pub mode: Mode,
@@ -85,7 +99,8 @@ pub struct RunOption {
     pub output_json: bool,
     pub root: Option<String>,
     pub max_depth: Option<usize>,
-    pub exclude_patterns: Vec<Regex>
+    pub exclude_patterns: Vec<Regex>,
+    pub coloring: Coloring,
 }
 
 fn print_help() {
@@ -116,6 +131,7 @@ command.\n"
 fn print_version() {
     println!("{}", env!("CARGO_PKG_VERSION"));
 }
+
 pub fn run(option: RunOption) {
     let root = &option.root.clone().unwrap_or_else(|| ".".to_string());
     let directories_only = option.directories_only;
@@ -155,8 +171,19 @@ pub fn run(option: RunOption) {
     } else {
         let format_result = diagram_formatting::format_paths(root, paths);
         let lscolors = LsColors::from_env().unwrap_or_default();
+        let coloring = match option.coloring {
+            Coloring::Never => None,
+            Coloring::Always => Some(&lscolors),
+            Coloring::Automatic => {
+                if atty::is(atty::Stream::Stdout) {
+                    Some(&lscolors)
+                } else {
+                    None
+                }
+            }
+        };
         if let Some(editor) = option.editor {
-            output::print_entries(&format_result, true, &lscolors);
+            output::print_entries(&format_result, true, coloring);
             let editor = if cfg!(windows) {
                 editor.unwrap_or_else(|| "".to_string())
             } else {
@@ -164,7 +191,7 @@ pub fn run(option: RunOption) {
             };
             output::create_edit_aliases(&editor, &format_result);
         } else {
-            output::print_entries(&format_result, false, &lscolors);
+            output::print_entries(&format_result, false, coloring);
         }
     }
 }
