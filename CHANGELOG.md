@@ -3,6 +3,7 @@
 - Add M1 builds to release.
 - Support installing from Nix flake.
 - Add `-E/--exclude PATTERN` option to exclude paths from results.
+- Add `-e/--color WHEN` option to control colors in output.
 
 # 0.3.6
 

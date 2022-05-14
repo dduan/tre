@@ -7,15 +7,15 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
-fn color_print<T>(text: T, color: &ColorSpec) -> bool
+fn color_print<T>(text: T, color: Option<&ColorSpec>) -> bool
 where
     T: Display,
 {
-    if atty::is(atty::Stream::Stdout) {
+    if let Some(color_spec) = color {
         let stdout = BufferWriter::stdout(ColorChoice::Auto);
         let mut buffer = stdout.buffer();
         buffer
-            .set_color(color)
+            .set_color(color_spec)
             .and_then(|_| write!(&mut buffer, "{}", text))
             .and_then(|_| buffer.reset())
             .and_then(|_| stdout.print(&buffer))
@@ -26,22 +26,24 @@ where
     }
 }
 
-pub fn print_entries(entries: &[FormattedEntry], create_alias: bool, lscolors: &LsColors) {
+pub fn print_entries(entries: &[FormattedEntry], create_alias: bool, lscolors: Option<&LsColors>) {
+    let number_color = lscolors.map(|_| ColorSpec::new().set_fg(Some(Color::Red)).to_owned());
     for (index, entry) in entries.iter().enumerate() {
         if create_alias {
             print!("{}[", entry.prefix);
 
-            color_print(index, ColorSpec::new().set_fg(Some(Color::Red)));
+            color_print(index, number_color.as_ref());
             print!("] ");
         } else {
             print!("{}", entry.prefix);
         }
 
-        let spec = lscolors
-            .style_for_path(&entry.path)
-            .map(convert_to_color_spec)
-            .unwrap_or_default();
-        color_print(&entry.name, &spec);
+        let spec = lscolors.map(|c| {
+            c.style_for_path(&entry.path)
+                .map(convert_to_color_spec)
+                .unwrap_or_default()
+        });
+        color_print(&entry.name, spec.as_ref());
         println!()
     }
 }
@@ -102,7 +104,11 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
     let powershell_alias = open_alias_file_with_suffix("ps1");
     if let Ok(mut alias_file) = powershell_alias {
         for (index, entry) in entries.iter().enumerate() {
-            let editor = if editor.is_empty() { "Start-Process" } else { editor };
+            let editor = if editor.is_empty() {
+                "Start-Process"
+            } else {
+                editor
+            };
             let result = writeln!(
                 &mut alias_file,
                 "doskey /exename=pwsh.exe e{}={} {}\ndoskey /exename=powershell.exe e{}={} {}",
@@ -114,7 +120,6 @@ pub fn create_edit_aliases(editor: &str, entries: &[FormattedEntry]) {
             }
         }
     }
-
 
     let cmd_alias = open_alias_file_with_suffix("bat");
     if let Ok(mut alias_file) = cmd_alias {
