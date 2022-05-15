@@ -1,5 +1,6 @@
 use super::file_tree::{File, FileTree, FileType};
 use std::collections::HashMap;
+use std::fs;
 
 #[derive(Debug, Clone, PartialEq)]
 enum PrefixSegment {
@@ -56,11 +57,18 @@ fn format_file(
     file: &File,
     format_history: &mut HashMap<usize, usize>,
     result: &mut Vec<FormattedEntry>,
+    make_absolute: bool,
 ) {
     let prefix = make_prefix(tree, file, format_history);
+    let path = if make_absolute {
+        fs::canonicalize(&file.path).unwrap().display().to_string()
+    } else {
+        file.path.clone()
+    };
+
     result.push(FormattedEntry {
         name: file.display_name.clone(),
-        path: file.path.clone(),
+        path,
         prefix,
         link: file.link(),
     });
@@ -77,18 +85,28 @@ fn format_file(
 
     if let Some(children) = file.children() {
         for child_id in children.values() {
-            format_file(tree, tree.get(*child_id), format_history, result);
+            format_file(
+                tree,
+                tree.get(*child_id),
+                format_history,
+                result,
+                make_absolute,
+            );
         }
     }
 }
 
-pub fn format_paths(root_path: &str, children: Vec<(String, FileType)>) -> Vec<FormattedEntry> {
+pub fn format_paths(
+    root_path: &str,
+    children: Vec<(String, FileType)>,
+    make_absolute: bool,
+) -> Vec<FormattedEntry> {
     let mut history = HashMap::new();
     let mut result = Vec::new();
     match FileTree::new(root_path, children) {
         Some(tree) => {
             let root = tree.get_root();
-            format_file(&tree, root, &mut history, &mut result);
+            format_file(&tree, root, &mut history, &mut result, make_absolute);
             result
         }
         None => Vec::new(),
@@ -109,6 +127,7 @@ mod test {
                 ("a".to_string(), FileType::File),
                 (format!("b{}c", path::MAIN_SEPARATOR), FileType::File),
             ],
+            false,
         );
 
         let bc_path = format!("b{}c", path::MAIN_SEPARATOR);

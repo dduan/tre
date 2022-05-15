@@ -19,7 +19,7 @@ _tre() {
 
     case "${cmd}" in
         tre)
-            opts="-h -V -a -s -d -e -j -l -E -c --help --version --all --simple --directories --editor --json --limit --exclude --color <PATH>"
+            opts="-h -V -a -s -d -e -j -l -E -c -p --help --version --all --simple --directories --editor --json --limit --exclude --color --portable <PATH>"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

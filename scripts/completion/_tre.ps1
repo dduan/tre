@@ -41,6 +41,8 @@ Register-ArgumentCompleter -Native -CommandName 'tre' -ScriptBlock {
             [CompletionResult]::new('--directories', 'directories', [CompletionResultType]::ParameterName, 'Only list directories in output')
             [CompletionResult]::new('-j', 'j', [CompletionResultType]::ParameterName, 'Output JSON instead of tree diagram')
             [CompletionResult]::new('--json', 'json', [CompletionResultType]::ParameterName, 'Output JSON instead of tree diagram')
+            [CompletionResult]::new('-p', 'p', [CompletionResultType]::ParameterName, 'Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance')
+            [CompletionResult]::new('--portable', 'portable', [CompletionResultType]::ParameterName, 'Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance')
             break
         }
     })

@@ -6,6 +6,9 @@
 - Add `-e/--color WHEN` option to control colors in output.
 - The short flag for `--version` is renamed from `-v` to `-V`.
 - Provide completion scripts for various shells in scripts/completion.
+- Add `-p/--portable` option, which enables portable paths when generating editor
+  aliases. Without this flag, editor alias only works in the same working directory
+  in which `tre` was last invoked.
 
 # 0.3.6
 
