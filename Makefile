@@ -1,4 +1,3 @@
-
 .PHONY: check
 check:
 	@cargo check
@@ -7,7 +6,6 @@ check:
 .PHONY: build
 build:
 	@SHELL_COMPLETIONS_DIR=scripts/completion cargo build
-	@git diff --exit-code
 
 .PHONY: test
 test:
