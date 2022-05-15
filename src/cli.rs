@@ -1,4 +1,4 @@
-use crate::tre::{Mode, RunOption};
+use crate::tre::{Mode, RunOptions};
 use clap::{ArgEnum, Parser};
 
 #[derive(ArgEnum, Clone, Debug)]
@@ -56,8 +56,9 @@ pub struct Interface {
     path: String,
 }
 
-impl Interface {
-    pub fn as_options(self) -> RunOption {
+#[allow(clippy::from_over_into)]
+impl Into<RunOptions> for Interface {
+    fn into(self) -> RunOptions {
         let mode: Mode = if self.all {
             Mode::ShowAllFiles
         } else if !cfg!(windows) && self.simple {
@@ -66,7 +67,7 @@ impl Interface {
             Mode::FollowGitIgnore
         };
 
-        RunOption {
+        RunOptions {
             editor: self.editor,
             mode,
             directories_only: self.directories,

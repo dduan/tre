@@ -10,6 +10,6 @@ mod tre;
 
 fn main() {
     let inputs = cli::Interface::parse();
-    let options = inputs.as_options();
+    let options: tre::RunOptions = inputs.into();
     tre::run(options)
 }

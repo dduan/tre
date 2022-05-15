@@ -15,7 +15,7 @@ pub enum Mode {
 }
 
 #[derive(Debug, Clone)]
-pub struct RunOption {
+pub struct RunOptions {
     pub editor: Option<Option<String>>,
     pub mode: Mode,
     pub directories_only: bool,
@@ -26,7 +26,7 @@ pub struct RunOption {
     pub coloring: Coloring,
 }
 
-pub fn run(option: RunOption) {
+pub fn run(option: RunOptions) {
     let directories_only = option.directories_only;
     let max_depth = option.max_depth.unwrap_or(std::usize::MAX);
     let paths: Vec<(String, FileType)> = match option.mode {
