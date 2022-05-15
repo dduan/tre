@@ -57,6 +57,10 @@ pub struct Interface {
     /// When to color the output. `automatic` means when printing to a terminal, tre will include
     /// colors; otherwise it will disable colors.
     pub color: Coloring,
+    /// Generate portable (absolute) paths for editor aliases. By default, aliases use relative
+    /// paths for better performance.
+    #[clap(short, long)]
+    pub portable: bool,
     #[clap(default_value = ".")]
     pub path: String,
 }

@@ -8,3 +8,4 @@ complete -c tre -s a -l all -d 'Print all files and directories, including hidde
 complete -c tre -s s -l simple -d 'Use normal print despite gitignore settings. \'-a\' has higher priority'
 complete -c tre -s d -l directories -d 'Only list directories in output'
 complete -c tre -s j -l json -d 'Output JSON instead of tree diagram'
+complete -c tre -s p -l portable -d 'Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance'

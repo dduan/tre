@@ -35,6 +35,8 @@ _tre() {
 '--directories[Only list directories in output]' \
 '-j[Output JSON instead of tree diagram]' \
 '--json[Output JSON instead of tree diagram]' \
+'-p[Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance]' \
+'--portable[Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance]' \
 '::path:' \
 && ret=0
 }

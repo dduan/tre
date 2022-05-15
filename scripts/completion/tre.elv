@@ -38,6 +38,8 @@ set edit:completion:arg-completer[tre] = {|@words|
             cand --directories 'Only list directories in output'
             cand -j 'Output JSON instead of tree diagram'
             cand --json 'Output JSON instead of tree diagram'
+            cand -p 'Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance'
+            cand --portable 'Generate portable (absolute) paths for editor aliases. By default, aliases use relative paths for better performance'
         }
     ]
     $completions[$command]
