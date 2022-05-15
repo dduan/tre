@@ -1,4 +1,4 @@
-use std::env;
+use clap::Parser;
 
 mod cli;
 mod diagram_formatting;
@@ -9,7 +9,7 @@ mod path_finders;
 mod tre;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let option = cli::get_run_option(&args);
-    tre::run(option)
+    let inputs = cli::Interface::parse();
+    let options = inputs.as_options();
+    tre::run(options)
 }
