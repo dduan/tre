@@ -1,4 +1,4 @@
-use crate::cli::Coloring;
+use crate::cli;
 use crate::diagram_formatting;
 use crate::file_tree::FileType;
 use crate::json_formatting;
@@ -23,7 +23,47 @@ pub struct RunOptions {
     pub root: String,
     pub max_depth: Option<usize>,
     pub exclude_patterns: Vec<Regex>,
-    pub coloring: Coloring,
+    pub coloring: cli::Coloring,
+}
+
+#[cfg(not(windows))]
+fn mode(inputs: &cli::Interface) -> Mode {
+    if inputs.all {
+        Mode::ShowAllFiles
+    } else if inputs.simple {
+        Mode::ExcludeHiddenFiles
+    } else {
+        Mode::FollowGitIgnore
+    }
+}
+
+#[cfg(windows)]
+fn mode(inputs: &cli::Interface) -> Mode {
+    if inputs.all {
+        Mode::ShowAllFiles
+    } else {
+        Mode::FollowGitIgnore
+    }
+}
+
+impl From<cli::Interface> for RunOptions {
+    fn from(inputs: cli::Interface) -> Self {
+        let mode = mode(&inputs);
+        RunOptions {
+            editor: inputs.editor,
+            mode,
+            directories_only: inputs.directories,
+            output_json: inputs.json,
+            root: inputs.path,
+            max_depth: inputs.limit,
+            exclude_patterns: inputs
+                .exclude
+                .iter()
+                .filter_map(|p| regex::Regex::new(p).ok())
+                .collect(),
+            coloring: inputs.color,
+        }
+    }
 }
 
 pub fn run(option: RunOptions) {
@@ -59,9 +99,9 @@ pub fn run(option: RunOptions) {
         let format_result = diagram_formatting::format_paths(&option.root, paths);
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
-            Coloring::Never => None,
-            Coloring::Always => Some(&lscolors),
-            Coloring::Automatic => {
+            cli::Coloring::Never => None,
+            cli::Coloring::Always => Some(&lscolors),
+            cli::Coloring::Automatic => {
                 if atty::is(atty::Stream::Stdout) {
                     Some(&lscolors)
                 } else {

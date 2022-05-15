@@ -1,4 +1,3 @@
-use crate::tre::{Mode, RunOptions};
 use clap::{ArgEnum, Parser};
 
 #[derive(ArgEnum, Clone, Debug)]
@@ -24,62 +23,40 @@ impl core::str::FromStr for Coloring {
 pub struct Interface {
     /// Print all files and directories, including hidden ones.
     #[clap(long, short, parse(from_flag))]
-    all: bool,
+    pub all: bool,
     /// Use normal print despite gitignore settings. '-a' has higher priority.
     #[cfg(not(target_os = "windows"))]
     #[clap(long, short, parse(from_flag))]
-    simple: bool,
+    pub simple: bool,
     /// Only list directories in output.
     #[clap(long, short, parse(from_flag))]
-    directories: bool,
+    pub directories: bool,
     /// Create aliases for each displayed result, and add a number in front of file name to
     /// indicate the alias name. For example, a number "42" means an shell alias "e42" has been
     /// created. Running "e42" will cause the associated file or directory to be open with $EDITOR
     /// (or a default program for the file type on Windows), or a command specified along with this
     /// command.
     #[clap(long, short, value_name = "COMMAND")]
-    editor: Option<Option<String>>,
+    pub editor: Option<Option<String>>,
     /// Output JSON instead of tree diagram.
     #[clap(long, short, parse(from_flag))]
-    json: bool,
+    pub json: bool,
     /// Limit depth of the tree in output.
     #[clap(long, short)]
-    limit: Option<usize>,
+    pub limit: Option<usize>,
     /// Exclude paths matching a regex pattern. Repeatable.
     #[clap(long, short = 'E', value_name = "PATTERN")]
-    exclude: Vec<String>,
-    #[clap(long, short, value_name = "WHEN", default_value = "automatic")]
-    /// When to color the output (automatic, always, or never). `automatic` means when printing to
-    /// a terminal, tre will include colors; otherwise it will disable colors.
-    color: Coloring,
+    pub exclude: Vec<String>,
+    #[clap(
+        arg_enum,
+        long,
+        short,
+        value_name = "WHEN",
+        default_value = "automatic"
+    )]
+    /// When to color the output. `automatic` means when printing to a terminal, tre will include
+    /// colors; otherwise it will disable colors.
+    pub color: Coloring,
     #[clap(default_value = ".")]
-    path: String,
-}
-
-#[allow(clippy::from_over_into)]
-impl Into<RunOptions> for Interface {
-    fn into(self) -> RunOptions {
-        let mode: Mode = if self.all {
-            Mode::ShowAllFiles
-        } else if !cfg!(windows) && self.simple {
-            Mode::ExcludeHiddenFiles
-        } else {
-            Mode::FollowGitIgnore
-        };
-
-        RunOptions {
-            editor: self.editor,
-            mode,
-            directories_only: self.directories,
-            output_json: self.json,
-            root: self.path,
-            max_depth: self.limit,
-            exclude_patterns: self
-                .exclude
-                .iter()
-                .filter_map(|p| regex::Regex::new(p).ok())
-                .collect(),
-            coloring: self.color,
-        }
-    }
+    pub path: String,
 }
