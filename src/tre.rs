@@ -10,6 +10,7 @@ use regex::Regex;
 #[derive(Debug, Clone)]
 pub enum Mode {
     FollowGitIgnore,
+    #[cfg(not(windows))]
     ExcludeHiddenFiles,
     ShowAllFiles,
 }
