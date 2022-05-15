@@ -44,7 +44,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Action
-      run: make ${{ matrix.action }}
+      run: make ${{ matrix.action }} && git diff --exit-code
 
   Windows:
     runs-on: windows-2019

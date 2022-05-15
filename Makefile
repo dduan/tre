@@ -1,4 +1,3 @@
-
 .PHONY: check
 check:
 	@cargo check
@@ -6,7 +5,7 @@ check:
 
 .PHONY: build
 build:
-	@cargo build
+	@SHELL_COMPLETIONS_DIR=scripts/completion cargo build
 
 .PHONY: test
 test:

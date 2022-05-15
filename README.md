@@ -195,6 +195,12 @@ If you like the editor aliasing feature, you may want to check out [ea][].
 
 [ea]: https://github.com/dduan/ea
 
+## Packaging
+
+`tre` is a standard Cargo-managed Rust project.
+A unix manual is available at `manual/tre.1`.
+Completion scripts for various shells are at `scripts/completion`.
+
 ## License
 
 MIT. See `LICENSE.md`.
