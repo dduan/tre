@@ -5,6 +5,7 @@
 - Add `-E/--exclude PATTERN` option to exclude paths from results.
 - Add `-e/--color WHEN` option to control colors in output.
 - The short flag for `--version` is renamed from `-v` to `-V`.
+- Provide completion scripts for various shells in scripts/completion.
 
 # 0.3.6
 
