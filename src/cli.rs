@@ -1,6 +1,6 @@
 use clap::{ArgEnum, Parser};
 
-#[derive(ArgEnum, Clone, Debug)]
+#[derive(ArgEnum, Clone, Debug, PartialEq)]
 pub enum Coloring {
     Automatic,
     Always,
@@ -63,4 +63,26 @@ pub struct Interface {
     pub portable: bool,
     #[clap(default_value = ".")]
     pub path: String,
+}
+
+#[cfg(test)]
+mod test {
+    use super::Coloring;
+    use core::str::FromStr;
+    #[test]
+    fn coloring_parsing() {
+        assert_eq!(Coloring::Always, Coloring::from_str("always").unwrap());
+        assert_eq!(Coloring::Never, Coloring::from_str("never").unwrap());
+        assert_eq!(
+            Coloring::Automatic,
+            Coloring::from_str("automatic").unwrap()
+        );
+        assert_eq!(Coloring::Always, Coloring::from_str("AlwAys").unwrap());
+        assert_eq!(Coloring::Never, Coloring::from_str("NeveR").unwrap());
+        assert_eq!(
+            Coloring::Automatic,
+            Coloring::from_str("AutoMATic").unwrap()
+        );
+        assert_eq!(Coloring::Automatic, Coloring::from_str("xxx").unwrap());
+    }
 }
