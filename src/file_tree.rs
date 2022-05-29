@@ -4,10 +4,7 @@ use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
 fn to_string(component: &Component) -> String {
-    (*component)
-        .as_os_str()
-        .to_string_lossy()
-        .into_owned()
+    (*component).as_os_str().to_string_lossy().into_owned()
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -141,8 +138,6 @@ impl FileTree {
                 FileType::File => Some(TypeSpecficData::File),
             };
 
-            data_option.as_ref()?;
-
             let data = data_option.unwrap();
 
             let mut ancestry: Vec<Component> = Path::new(&path)
@@ -151,9 +146,7 @@ impl FileTree {
                 .skip(root_prefix_len)
                 .collect();
 
-            let ancestor = ancestry
-                .pop()
-                .map(|x| to_string(&x));
+            let ancestor = ancestry.pop().map(|x| to_string(&x));
 
             if ancestor.is_none() {
                 continue;
@@ -221,8 +214,8 @@ impl FileTree {
 
 #[cfg(test)]
 mod test {
-    use std::path::Path;
     use super::{FileTree, FileType, TypeSpecficData};
+    use std::path::Path;
 
     #[test]
     fn tree_construction() {
