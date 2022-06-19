@@ -10,6 +10,7 @@
   aliases. Without this flag, editor alias only works in the same working directory
   in which `tre` was last invoked.
 - Files untracked by git is now included in output by default.
+- Output order is now deterministic.
 
 # 0.3.6
 
