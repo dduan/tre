@@ -16,12 +16,13 @@
             pname = info.name;
             version = info.version;
             src = ./.;
-            cargoSha256 = "sha256-Cqw/9ToDhArRFxW6Wl5AAwpa3iGy/nJD6Jt7VwUEs3I=";
+            cargoSha256 = "sha256-eo84s6Hv4shlNNRPJ1lXnEmBeB60N5x3YIXKk9uizD4=";
             lockFile = ./Cargo.lock;
             nativeBuildInputs = [ installShellFiles ];
             preFixup = ''
               installManPage manual/tre.1
             '';
+            doCheck = false;
           };
         };
         defaultPackage = packages.${info.name};
