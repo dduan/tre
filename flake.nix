@@ -21,8 +21,11 @@
             nativeBuildInputs = [ installShellFiles ];
             preFixup = ''
               installManPage manual/tre.1
+              installShellCompletion scripts/completion/tre.{bash,fish}
+              installShellCompletion --zsh scripts/completion/_tre
             '';
-            doCheck = false;
+            # this test requires package to be in a git repo to succeed
+            checkFlags = "--skip respect_git_ignore";
           };
         };
         defaultPackage = packages.${info.name};
