@@ -84,7 +84,12 @@ pub fn find_non_git_ignored_paths(
             .arg("HEAD")
             .arg(root);
     } else {
-        git_command.arg("ls-files").arg(root);
+        git_command
+            .arg("ls-files")
+            .arg("-o")
+            .arg("-c")
+            .arg("--exclude-standard")
+            .arg(root);
     };
 
     if let Ok(git_output) = git_command.output() {
