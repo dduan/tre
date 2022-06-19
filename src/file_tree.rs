@@ -1,5 +1,5 @@
 use slab::Slab;
-use std::collections::HashMap;
+use indexmap::IndexMap;
 use std::fs::{self, Metadata};
 use std::path::{Component, Path, PathBuf};
 
@@ -30,7 +30,7 @@ impl FileType {
 #[derive(Debug, Clone)]
 pub enum TypeSpecficData {
     File,
-    Directory(HashMap<String, usize>),
+    Directory(IndexMap<String, usize>),
     Link(String),
 }
 
@@ -53,7 +53,7 @@ impl File {
         }
     }
 
-    pub fn children(&self) -> Option<&HashMap<String, usize>> {
+    pub fn children(&self) -> Option<&IndexMap<String, usize>> {
         if let TypeSpecficData::Directory(children) = &self.data {
             Some(children)
         } else {
@@ -124,7 +124,7 @@ impl FileTree {
             display_name: root_path.to_string(),
             path: root_path.to_string(),
             file_type: FileType::Directory,
-            data: TypeSpecficData::Directory(HashMap::new()),
+            data: TypeSpecficData::Directory(IndexMap::new()),
         });
         root_entry.insert(root);
 
@@ -134,7 +134,7 @@ impl FileTree {
                     .ok()
                     .and_then(|path| path.to_str().map(|x| x.to_string()))
                     .map(TypeSpecficData::Link),
-                FileType::Directory => Some(TypeSpecficData::Directory(HashMap::new())),
+                FileType::Directory => Some(TypeSpecficData::Directory(IndexMap::new())),
                 FileType::File => Some(TypeSpecficData::File),
             };
 
@@ -172,7 +172,7 @@ impl FileTree {
                         display_name: display_name.clone(),
                         path: current_ancestor_path.to_string_lossy().into_owned(),
                         file_type: FileType::Directory,
-                        data: TypeSpecficData::Directory(HashMap::new()),
+                        data: TypeSpecficData::Directory(IndexMap::new()),
                     }));
                     slab[current_acestor_id].add_child(&display_name, new_id);
                     current_acestor_id = new_id;
