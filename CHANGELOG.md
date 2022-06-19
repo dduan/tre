@@ -9,6 +9,7 @@
 - Add `-p/--portable` option, which enables portable paths when generating editor
   aliases. Without this flag, editor alias only works in the same working directory
   in which `tre` was last invoked.
+- Files untracked by git is now included in output by default.
 
 # 0.3.6
 
