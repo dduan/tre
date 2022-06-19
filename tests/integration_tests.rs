@@ -37,6 +37,7 @@ fn respect_git_ignore() -> Result<(), Box<dyn error::Error>> {
     Ok(())
 }
 
+#[cfg(not(windows))]
 #[test]
 fn ignore_hidden() -> Result<(), Box<dyn error::Error>> {
     let mut tre = process::Command::cargo_bin("tre")?;
