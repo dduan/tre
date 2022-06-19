@@ -9,7 +9,7 @@ documentation = "https://github.com/dduan/tre/blob/master/README.md"
 readme = "README.md"
 homepage = "https://github.com/dduan/tre"
 repository = "https://github.com/dduan/tre"
-exclude = ["/.github/*", "alias_demo.gif", "flake.nix", "flake.lock", "scripts/*"]
+exclude = ["/.github/*", "alias_demo.gif", "flake.nix", "flake.lock", "scripts/*", "fixtures/*"]
 keywords = ["cli", "tool", "filesystem", "Command line utilities"]
 categories = ["command-line-utilities"]
 
@@ -29,6 +29,9 @@ walkdir = "2"
 [build-dependencies]
 clap = { version = "3.1.8", features = ["cargo"] }
 clap_complete = "3.1"
+
+[dev-dependencies]
+assert_cmd = "2.0"
 
 [[bin]]
 name = "tre"
