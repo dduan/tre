@@ -229,13 +229,13 @@ jobs:
           crate: cargo-wix
           version: latest
       - run: cargo wix init
-      - run: cargo wix -v --nocapture -o .
+      - run: cargo wix -v --nocapture -o tre-command.msi
       - name: Upload MSI Artifact
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.RELEASE_UPLOAD_URL }}
-          asset_path: ./*.msi
+          asset_path: ./tre-command.msi
           asset_name: tre-${{ env.SL_VERSION }}-x86_64-pc-windows.msi
           asset_content_type: application/octet-stream
