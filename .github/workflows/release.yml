@@ -191,3 +191,36 @@ jobs:
         asset_path: ${{ env.ASSET }}
         asset_name: ${{ env.ASSET }}
         asset_content_type: application/octet-stream
+  WindowsInstaller:
+    runs-on: windows-latest
+    env:
+      RUSTFLAGS: '-C target-feature=+crt-static'
+    name: WindowsInstaller
+    steps:
+      - name: Get the release version from the tag
+        if: env.SL_VERSION == ''
+        run: |
+          # Apparently, this is the right way to get a tag name. Really?
+          #
+          # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
+          echo "SL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "version is: ${{ env.SL_VERSION }}"
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-wix
+          version: latest
+      - run: cargo wix init
+      - run: cargo wix -v --nocapture -o .
+      - name: Upload MSI Artifact
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+          asset_path: ./*.msi
+          asset_name: tre-${{ env.SL_VERSION }}-x86_64-pc-windows.msi
+          asset_content_type: application/octet-stream
