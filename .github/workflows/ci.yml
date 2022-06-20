@@ -74,4 +74,5 @@ jobs:
       with:
         crate: cargo-wix
         version: latest
+    - run: cargo wix init
     - run: cargo wix -v --nocapture -o .
