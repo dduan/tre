@@ -91,6 +91,10 @@ jobs:
           os: windows-2019
           rust: stable
           target: x86_64-pc-windows-msvc
+        - build: win-msvc-msi
+          os: windows-2019
+          rust: stable
+          target: x86_64-pc-windows-msvc
         - build: win-gnu
           os: windows-2019
           rust: stable-x86_64-gnu
@@ -151,6 +155,7 @@ jobs:
         echo "release version: $RELEASE_VERSION"
 
     - name: Build release binary
+      if: matrix.build != 'win-msvc-msi'
       run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
 
     - name: Strip release binary (linux and macos)
@@ -167,6 +172,7 @@ jobs:
           /target/arm-unknown-linux-gnueabihf/release/tre
 
     - name: Build archive
+      if: matrix.build != 'win-msvc-msi'
       shell: bash
       run: |
         outdir=${{ env.TARGET_DIR }}
@@ -181,6 +187,22 @@ jobs:
           gzip "$staging.tar"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
+    - name: Build archive
+      if: matrix.build == 'win-msvc-msi'
+      shell: bash
+      env:
+        RUSTFLAGS: '-C target-feature=+crt-static'
+      uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-wix
+        version: latest
+      run: |
+        outdir=${{ env.TARGET_DIR }}
+        staging="tre-${{ env.RELEASE_VERSION }}-${{ matrix.target }}"
+
+        cargo wix init
+        cargo wix -v --nocapture -o $staging.msi
+        echo "ASSET=$staging.msi" >> $GITHUB_ENV
 
     - name: Upload release archive
       uses: actions/upload-release-asset@v1.0.1
@@ -191,51 +213,3 @@ jobs:
         asset_path: ${{ env.ASSET }}
         asset_name: ${{ env.ASSET }}
         asset_content_type: application/octet-stream
-  WindowsInstaller:
-    runs-on: windows-latest
-    env:
-      RUSTFLAGS: '-C target-feature=+crt-static'
-    name: WindowsInstaller
-    steps:
-      - name: Get the release version from the tag
-        if: env.SL_VERSION == ''
-        run: |
-          # Apparently, this is the right way to get a tag name. Really?
-          #
-          # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
-          echo "SL_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "version is: ${{ env.SL_VERSION }}"
-      - name: Get release download URL
-        uses: actions/download-artifact@v1
-        with:
-          name: artifacts
-          path: artifacts
-
-      - name: Set release upload URL and release version
-        shell: bash
-        run: |
-          release_upload_url="$(cat artifacts/release-upload-url)"
-          echo "RELEASE_UPLOAD_URL=$release_upload_url" >> $GITHUB_ENV
-          echo "release upload url: $RELEASE_UPLOAD_URL"
-          release_version="$(cat artifacts/release-version)"
-          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
-          echo "release version: $RELEASE_VERSION"
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - uses: actions-rs/install@v0.1
-        with:
-          crate: cargo-wix
-          version: latest
-      - run: cargo wix init
-      - run: cargo wix -v --nocapture -o tre-command.msi
-      - name: Upload MSI Artifact
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
-          asset_path: ./tre-command.msi
-          asset_name: tre-${{ env.SL_VERSION }}-x86_64-pc-windows.msi
-          asset_content_type: application/octet-stream
