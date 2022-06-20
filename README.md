@@ -22,17 +22,18 @@ opened the file! See [how to set this up](#editor-aliasing).
 
 Tre is available in the following package managers.
 
-| Manager / OS         | Command                      |
-| -------------------- | ---------------------------- |
-| Homebrew / macOS     | `brew install tre-command`   |
-| MacPorts / macOS     | `port install tre-tree`      |
-| Debian (testing)     | `apt install tre-command`    |
-| Scoop / Windows      | `scoop install tre-command`  |
-| Cargo                | `cargo install tre-command`  |
-| AUR / Arch Linux     | `yay -S tre-command`         |
-| pkgsrc / NetBSD 9.1+ | `pkgin install tre-command`  |
-| Nixpkgs / NixOS      | Use `tre-command`            |
-| Nix flake            | Use `github:dduan/tre`       |
+| Manager / OS            | Command                      |
+| ----------------------- | ---------------------------- |
+| Homebrew / macOS        | `brew install tre-command`   |
+| MacPorts / macOS        | `port install tre-tree`      |
+| Debian (testing)        | `apt install tre-command`    |
+| Scoop / Windows         | `scoop install tre-command`  |
+| Windows Package Manager | `winget install tre-command` |
+| Cargo                   | `cargo install tre-command`  |
+| AUR / Arch Linux        | `yay -S tre-command`         |
+| pkgsrc / NetBSD 9.1+    | `pkgin install tre-command`  |
+| Nixpkgs / NixOS         | Use `tre-command`            |
+| Nix flake               | Use `github:dduan/tre`       |
 
 _The commands above are basic instructions. Use your favorite alternatives if
 you have one. For example, use a config file for Nix; or other method to install
