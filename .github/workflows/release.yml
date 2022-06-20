@@ -187,15 +187,19 @@ jobs:
           gzip "$staging.tar"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
-    - name: Build archive
+
+    - name: Install wix
       if: matrix.build == 'win-msvc-msi'
-      shell: bash
-      env:
-        RUSTFLAGS: '-C target-feature=+crt-static'
       uses: actions-rs/install@v0.1
       with:
         crate: cargo-wix
         version: latest
+
+    - name: Build .msi
+      if: matrix.build == 'win-msvc-msi'
+      shell: bash
+      env:
+        RUSTFLAGS: '-C target-feature=+crt-static'
       run: |
         outdir=${{ env.TARGET_DIR }}
         staging="tre-${{ env.RELEASE_VERSION }}-${{ matrix.target }}"
