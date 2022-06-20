@@ -59,11 +59,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Action
       run: make ${{ matrix.action }}
+
   WindowsInstaller:
     runs-on: windows-latest
     env:
       RUSTFLAGS: '-C target-feature=+crt-static'
-    name: Windows
+    name: WindowsInstaller
     steps:
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1
