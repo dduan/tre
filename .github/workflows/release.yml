@@ -125,7 +125,7 @@ jobs:
         target: ${{ matrix.target }}
 
     - name: Use Cross
-      # if: matrix.os != 'windows-2019'
+      if: matrix.build != 'win-msvc-msi'
       run: |
         cargo install cross
         echo "CARGO=cross" >> $GITHUB_ENV
