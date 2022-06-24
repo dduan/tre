@@ -60,6 +60,18 @@ fn convert_color(color: &lscolors::Color) -> Color {
         lscolors::Color::Magenta => Color::Magenta,
         lscolors::Color::Cyan => Color::Cyan,
         lscolors::Color::White => Color::White,
+
+        // bright colors don't have a direct alternative in termcolor::color
+        // translate them to "ansi 256" colors using the same value as used
+        // in to_ansi_term_color
+        lscolors::Color::BrightBlack => Color::Ansi256(8),
+        lscolors::Color::BrightRed => Color::Ansi256(9),
+        lscolors::Color::BrightGreen => Color::Ansi256(10),
+        lscolors::Color::BrightYellow => Color::Ansi256(11),
+        lscolors::Color::BrightBlue => Color::Ansi256(12),
+        lscolors::Color::BrightMagenta => Color::Ansi256(13),
+        lscolors::Color::BrightCyan => Color::Ansi256(14),
+        lscolors::Color::BrightWhite => Color::Ansi256(15),
     }
 }
 
