@@ -26,6 +26,7 @@ pub struct RunOptions {
     pub exclude_patterns: Vec<Regex>,
     pub coloring: cli::Coloring,
     pub portable_aliases: bool,
+    pub collapse: bool,
 }
 
 #[cfg(not(windows))]
@@ -65,6 +66,7 @@ impl From<cli::Interface> for RunOptions {
                 .collect(),
             coloring: inputs.color,
             portable_aliases: inputs.portable,
+            collapse: inputs.collapse,
         }
     }
 }
@@ -99,8 +101,12 @@ pub fn run(option: RunOptions) {
     if option.output_json {
         println!("{}", json_formatting::format_paths(&option.root, paths));
     } else {
-        let format_result =
-            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases);
+        let format_result = diagram_formatting::format_paths(
+            &option.root,
+            paths,
+            option.portable_aliases,
+            option.collapse,
+        );
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
