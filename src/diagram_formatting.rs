@@ -1,6 +1,7 @@
 use super::file_tree::{File, FileTree, FileType};
 use std::collections::HashMap;
 use std::fs;
+use std::path::Path;
 
 #[derive(Debug, Clone, PartialEq)]
 enum PrefixSegment {
@@ -32,11 +33,12 @@ fn make_prefix(tree: &FileTree, file: &File, format_history: &HashMap<usize, usi
     }
 
     while let Some(ancestor) = tree.get_parent(current) {
-        let count = format_history.get(&ancestor.id).unwrap_or(&0);
-        if *count == ancestor.children_count() {
-            segments.push(PrefixSegment::Empty);
-        } else {
-            segments.push(PrefixSegment::ShapeI);
+        match format_history.get(&ancestor.id) {
+            Some(count) if *count == ancestor.children_count() => {
+                segments.push(PrefixSegment::Empty)
+            }
+            Some(_) => segments.push(PrefixSegment::ShapeI),
+            None => {}
         }
         current = ancestor;
     }
@@ -58,19 +60,37 @@ fn format_file(
     format_history: &mut HashMap<usize, usize>,
     result: &mut Vec<FormattedEntry>,
     make_absolute: bool,
+    collapse: bool,
 ) {
-    let prefix = make_prefix(tree, file, format_history);
-    let path = if make_absolute {
-        fs::canonicalize(&file.path).unwrap().display().to_string()
+    let mut current = file;
+
+    let prefix = make_prefix(tree, current, format_history);
+    let mut path = if make_absolute {
+        fs::canonicalize(&current.path)
+            .unwrap()
+            .display()
+            .to_string()
     } else {
-        file.path.clone()
+        current.path.clone()
     };
+    let mut name = current.display_name.clone();
+
+    if collapse {
+        while current.children_count() == 1 {
+            let child = current.children().unwrap().values().next().unwrap();
+            let child_node = tree.get(*child);
+            let child_name = child_node.display_name.clone();
+            name = Path::new(&name).join(child_name).display().to_string();
+            path = child_node.path.clone();
+            current = child_node;
+        }
+    }
 
     result.push(FormattedEntry {
-        name: file.display_name.clone(),
+        name,
         path,
         prefix,
-        link: file.link(),
+        link: current.link(),
     });
 
     if let Some(parent) = tree.get_parent(file) {
@@ -79,11 +99,11 @@ fn format_file(
         }
     }
 
-    if let FileType::Directory = file.file_type {
-        format_history.insert(file.id, 0);
+    if let FileType::Directory = current.file_type {
+        format_history.insert(current.id, 0);
     }
 
-    if let Some(children) = file.children() {
+    if let Some(children) = current.children() {
         for child_id in children.values() {
             format_file(
                 tree,
@@ -91,6 +111,7 @@ fn format_file(
                 format_history,
                 result,
                 make_absolute,
+                collapse,
             );
         }
     }
@@ -100,13 +121,21 @@ pub fn format_paths(
     root_path: &str,
     children: Vec<(String, FileType)>,
     make_absolute: bool,
+    collapse: bool,
 ) -> Vec<FormattedEntry> {
     let mut history = HashMap::new();
     let mut result = Vec::new();
     match FileTree::new(root_path, children) {
         Some(tree) => {
             let root = tree.get_root();
-            format_file(&tree, root, &mut history, &mut result, make_absolute);
+            format_file(
+                &tree,
+                root,
+                &mut history,
+                &mut result,
+                make_absolute,
+                collapse,
+            );
             result
         }
         None => Vec::new(),
@@ -127,6 +156,7 @@ mod test {
                 ("a".to_string(), FileType::File),
                 (format!("b{}c", path::MAIN_SEPARATOR), FileType::File),
             ],
+            false,
             false,
         );
 

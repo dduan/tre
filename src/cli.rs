@@ -63,6 +63,9 @@ pub struct Interface {
     pub portable: bool,
     #[clap(default_value = ".")]
     pub path: String,
+    /// Collapse directories single entries.
+    #[clap(long, parse(from_flag))]
+    pub collapse: bool,
 }
 
 #[cfg(test)]
