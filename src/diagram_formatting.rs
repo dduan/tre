@@ -63,17 +63,10 @@ fn format_file(
     collapse: bool,
 ) {
     let mut current = file;
+    let mut path = current.path.clone();
+    let mut name = current.display_name.clone();
 
     let prefix = make_prefix(tree, current, format_history);
-    let mut path = if make_absolute {
-        fs::canonicalize(&current.path)
-            .unwrap()
-            .display()
-            .to_string()
-    } else {
-        current.path.clone()
-    };
-    let mut name = current.display_name.clone();
 
     if collapse {
         while current.children_count() == 1 {
@@ -84,6 +77,10 @@ fn format_file(
             path = child_node.path.clone();
             current = child_node;
         }
+    }
+
+    if make_absolute {
+        path = fs::canonicalize(&path).unwrap().display().to_string();
     }
 
     result.push(FormattedEntry {
