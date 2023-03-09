@@ -44,6 +44,9 @@ pub struct Interface {
     /// Limit depth of the tree in output.
     #[clap(long, short)]
     pub limit: Option<usize>,
+    /// Include paths matching a regex pattern. Repeatable.
+    #[clap(long, short = 'I', value_name = "PATTERN")]
+    pub include: Vec<String>,
     /// Exclude paths matching a regex pattern. Repeatable.
     #[clap(long, short = 'E', value_name = "PATTERN")]
     pub exclude: Vec<String>,

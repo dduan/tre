@@ -23,6 +23,7 @@ pub struct RunOptions {
     pub output_json: bool,
     pub root: String,
     pub max_depth: Option<usize>,
+    pub include_patterns: Vec<Regex>,
     pub exclude_patterns: Vec<Regex>,
     pub coloring: cli::Coloring,
     pub portable_aliases: bool,
@@ -58,6 +59,11 @@ impl From<cli::Interface> for RunOptions {
             output_json: inputs.json,
             root: inputs.path,
             max_depth: inputs.limit,
+            include_patterns: inputs
+                .include
+                .iter()
+                .filter_map(|p| regex::Regex::new(p).ok())
+                .collect(),
             exclude_patterns: inputs
                 .exclude
                 .iter()
@@ -84,6 +90,17 @@ pub fn run(option: RunOptions) {
         }
     };
 
+    let paths = if option.include_patterns.is_empty() {
+        paths
+    } else {
+        paths
+            .into_iter()
+            .filter(|(path, _)| {
+                let mut pattern_iters = option.include_patterns.iter();
+                pattern_iters.any(|p| p.is_match(path))
+            })
+            .collect()
+    };
     let paths = if option.exclude_patterns.is_empty() {
         paths
     } else {
