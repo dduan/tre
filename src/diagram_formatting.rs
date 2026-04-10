@@ -2,6 +2,12 @@ use super::file_tree::{File, FileTree, FileType};
 use std::collections::HashMap;
 use std::fs;
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Charset {
+    Unicode,
+    Ascii,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 enum PrefixSegment {
     ShapeL, // "└── "
