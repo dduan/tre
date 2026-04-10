@@ -99,14 +99,20 @@ pub fn run(option: RunOptions) {
     if option.output_json {
         println!("{}", json_formatting::format_paths(&option.root, paths));
     } else {
+        let is_tty = atty::is(atty::Stream::Stdout);
+        let charset = if cfg!(windows) && !is_tty {
+            diagram_formatting::Charset::Ascii
+        } else {
+            diagram_formatting::Charset::Unicode
+        };
         let format_result =
-            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases, diagram_formatting::Charset::Unicode);
+            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases, charset);
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
             cli::Coloring::Always => Some(&lscolors),
             cli::Coloring::Automatic => {
-                if atty::is(atty::Stream::Stdout) {
+                if is_tty {
                     Some(&lscolors)
                 } else {
                     None
