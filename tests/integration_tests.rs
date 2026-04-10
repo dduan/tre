@@ -6,6 +6,17 @@ use std::str;
 use assert_cmd::prelude::CommandCargoExt;
 use std::env;
 
+// on Windows, piped output uses ascii for formatting instead of unicode.
+// this function makes the tests check for ascii formatting on Windows and
+// unicode formatting on other platforms
+fn has_entry(text: &str, name: &str) -> bool {
+    if cfg!(windows) {
+        text.contains(&format!("-- {}", name))
+    } else {
+        text.contains(&format!("── {}", name))
+    }
+}
+
 #[test]
 fn respect_git_ignore() -> Result<(), Box<dyn error::Error>> {
     let mut tre = process::Command::cargo_bin("tre")?;
@@ -24,15 +35,15 @@ fn respect_git_ignore() -> Result<(), Box<dyn error::Error>> {
     let output = tre.output()?.stdout;
     let text = str::from_utf8(&output)?;
     assert!(text.contains("."));
-    assert!(text.contains("── .gitignore"));
-    assert!(text.contains("── a"));
-    assert!(text.contains("── b"));
-    assert!(text.contains("── c"));
-    assert!(text.contains("── d"));
-    assert!(text.contains("── e"));
-    assert!(text.contains("── h"));
-    assert!(text.contains("── f"));
-    assert!(text.contains("── g"));
+    assert!(has_entry(text, ".gitignore"));
+    assert!(has_entry(text, "a"));
+    assert!(has_entry(text, "b"));
+    assert!(has_entry(text, "c"));
+    assert!(has_entry(text, "d"));
+    assert!(has_entry(text, "e"));
+    assert!(has_entry(text, "h"));
+    assert!(has_entry(text, "f"));
+    assert!(has_entry(text, "g"));
     assert!(!text.contains("ignore_me"));
     Ok(())
 }
@@ -56,15 +67,15 @@ fn ignore_hidden() -> Result<(), Box<dyn error::Error>> {
     let output = tre.arg("-s").output()?.stdout;
     let text = str::from_utf8(&output)?;
     assert!(text.contains("."));
-    assert!(!text.contains("── .gitignore")); // hidden files should be hidden
-    assert!(text.contains("── a"));
-    assert!(text.contains("── b"));
-    assert!(text.contains("── c"));
-    assert!(text.contains("── d"));
-    assert!(text.contains("── e"));
-    assert!(text.contains("── h"));
-    assert!(text.contains("── f"));
-    assert!(text.contains("── g"));
+    assert!(!has_entry(text, ".gitignore")); // hidden files should be hidden
+    assert!(has_entry(text, "a"));
+    assert!(has_entry(text, "b"));
+    assert!(has_entry(text, "c"));
+    assert!(has_entry(text, "d"));
+    assert!(has_entry(text, "e"));
+    assert!(has_entry(text, "h"));
+    assert!(has_entry(text, "f"));
+    assert!(has_entry(text, "g"));
     assert!(text.contains("ignore_me"));
     Ok(())
 }
@@ -87,15 +98,15 @@ fn all_files() -> Result<(), Box<dyn error::Error>> {
     let output = tre.arg("-a").output()?.stdout;
     let text = str::from_utf8(&output)?;
     assert!(text.contains("."));
-    assert!(text.contains("── .gitignore")); // hidden files should be hidden
-    assert!(text.contains("── a"));
-    assert!(text.contains("── b"));
-    assert!(text.contains("── c"));
-    assert!(text.contains("── d"));
-    assert!(text.contains("── e"));
-    assert!(text.contains("── h"));
-    assert!(text.contains("── f"));
-    assert!(text.contains("── g"));
+    assert!(has_entry(text, ".gitignore"));
+    assert!(has_entry(text, "a"));
+    assert!(has_entry(text, "b"));
+    assert!(has_entry(text, "c"));
+    assert!(has_entry(text, "d"));
+    assert!(has_entry(text, "e"));
+    assert!(has_entry(text, "h"));
+    assert!(has_entry(text, "f"));
+    assert!(has_entry(text, "g"));
     assert!(text.contains("ignore_me"));
     Ok(())
 }
