@@ -43,7 +43,12 @@ pub struct FormattedEntry {
     pub link: Option<String>,
 }
 
-fn make_prefix(tree: &FileTree, file: &File, format_history: &HashMap<usize, usize>) -> String {
+fn make_prefix(
+    tree: &FileTree,
+    file: &File,
+    format_history: &HashMap<usize, usize>,
+    charset: Charset,
+) -> String {
     let mut segments = Vec::new();
     let mut current = file;
     if let Some(ancestor) = tree.get_parent(file) {
@@ -67,14 +72,9 @@ fn make_prefix(tree: &FileTree, file: &File, format_history: &HashMap<usize, usi
     }
 
     segments.reverse();
-    segments.iter().fold(String::new(), |s, seg| {
-        s + match seg {
-            PrefixSegment::ShapeL => "└── ",
-            PrefixSegment::ShapeT => "├── ",
-            PrefixSegment::ShapeI => "│   ",
-            PrefixSegment::Empty => "    ",
-        }
-    })
+    segments
+        .iter()
+        .fold(String::new(), |s, seg| s + seg.as_str(charset))
 }
 
 fn format_file(
@@ -83,8 +83,9 @@ fn format_file(
     format_history: &mut HashMap<usize, usize>,
     result: &mut Vec<FormattedEntry>,
     make_absolute: bool,
+    charset: Charset,
 ) {
-    let prefix = make_prefix(tree, file, format_history);
+    let prefix = make_prefix(tree, file, format_history, charset);
     let path = if make_absolute {
         fs::canonicalize(&file.path).unwrap().display().to_string()
     } else {
@@ -116,6 +117,7 @@ fn format_file(
                 format_history,
                 result,
                 make_absolute,
+                charset,
             );
         }
     }
@@ -125,13 +127,21 @@ pub fn format_paths(
     root_path: &str,
     children: Vec<(String, FileType)>,
     make_absolute: bool,
+    charset: Charset,
 ) -> Vec<FormattedEntry> {
     let mut history = HashMap::new();
     let mut result = Vec::new();
     match FileTree::new(root_path, children) {
         Some(tree) => {
             let root = tree.get_root();
-            format_file(&tree, root, &mut history, &mut result, make_absolute);
+            format_file(
+                &tree,
+                root,
+                &mut history,
+                &mut result,
+                make_absolute,
+                charset,
+            );
             result
         }
         None => Vec::new(),
@@ -140,7 +150,7 @@ pub fn format_paths(
 
 #[cfg(test)]
 mod test {
-    use super::FormattedEntry;
+    use super::{Charset, FormattedEntry};
     use crate::file_tree::FileType;
     use std::path;
 
@@ -153,7 +163,7 @@ mod test {
 
     #[test]
     fn formatting_works() {
-        let formatted = super::format_paths(".", test_input(), false);
+        let formatted = super::format_paths(".", test_input(), false, Charset::Unicode);
 
         let bc_path = format!("b{}c", path::MAIN_SEPARATOR);
         let b_path = format!(".{}b", path::MAIN_SEPARATOR);

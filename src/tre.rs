@@ -100,7 +100,7 @@ pub fn run(option: RunOptions) {
         println!("{}", json_formatting::format_paths(&option.root, paths));
     } else {
         let format_result =
-            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases);
+            diagram_formatting::format_paths(&option.root, paths, option.portable_aliases, diagram_formatting::Charset::Unicode);
         let lscolors = LsColors::from_env().unwrap_or_default();
         let coloring = match option.coloring {
             cli::Coloring::Never => None,
