@@ -16,6 +16,25 @@ enum PrefixSegment {
     Empty,  // "    "
 }
 
+impl PrefixSegment {
+    fn as_str(&self, charset: Charset) -> &'static str {
+        match charset {
+            Charset::Unicode => match self {
+                PrefixSegment::ShapeL => "└── ",
+                PrefixSegment::ShapeT => "├── ",
+                PrefixSegment::ShapeI => "│   ",
+                PrefixSegment::Empty => "    ",
+            },
+            Charset::Ascii => match self {
+                PrefixSegment::ShapeL => "`-- ",
+                PrefixSegment::ShapeT => "|-- ",
+                PrefixSegment::ShapeI => "|   ",
+                PrefixSegment::Empty => "    ",
+            },
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct FormattedEntry {
     pub name: String,
