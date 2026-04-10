@@ -26,7 +26,7 @@ impl PrefixSegment {
                 PrefixSegment::Empty => "    ",
             },
             Charset::Ascii => match self {
-                PrefixSegment::ShapeL => "`-- ",
+                PrefixSegment::ShapeL => "\\-- ",
                 PrefixSegment::ShapeT => "|-- ",
                 PrefixSegment::ShapeI => "|   ",
                 PrefixSegment::Empty => "    ",
