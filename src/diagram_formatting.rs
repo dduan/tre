@@ -223,4 +223,67 @@ mod test {
 
         assert!(formatted == variant0 || formatted == variant1);
     }
+
+    #[test]
+    fn formatting_ascii() {
+        let formatted = super::format_paths(".", test_input(), false, Charset::Ascii);
+
+        let bc_path = format!("b{}c", path::MAIN_SEPARATOR);
+        let b_path = format!(".{}b", path::MAIN_SEPARATOR);
+        let variant0 = vec![
+            FormattedEntry {
+                name: ".".to_string(),
+                path: ".".to_string(),
+                prefix: String::new(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "a".to_string(),
+                path: "a".to_string(),
+                prefix: "|-- ".to_string(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "b".to_string(),
+                path: b_path.clone(),
+                prefix: "`-- ".to_string(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "c".to_string(),
+                path: bc_path.clone(),
+                prefix: "    `-- ".to_string(),
+                link: None,
+            },
+        ];
+
+        let variant1 = vec![
+            FormattedEntry {
+                name: ".".to_string(),
+                path: ".".to_string(),
+                prefix: String::new(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "b".to_string(),
+                path: b_path.clone(),
+                prefix: "|-- ".to_string(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "c".to_string(),
+                path: bc_path.clone(),
+                prefix: "|   `-- ".to_string(),
+                link: None,
+            },
+            FormattedEntry {
+                name: "a".to_string(),
+                path: "a".to_string(),
+                prefix: "`-- ".to_string(),
+                link: None,
+            },
+        ];
+
+        assert!(formatted == variant0 || formatted == variant1);
+    }
 }
