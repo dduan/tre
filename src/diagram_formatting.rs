@@ -119,16 +119,16 @@ mod test {
     use crate::file_tree::FileType;
     use std::path;
 
+    fn test_input() -> Vec<(String, FileType)> {
+        vec![
+            ("a".to_string(), FileType::File),
+            (format!("b{}c", path::MAIN_SEPARATOR), FileType::File),
+        ]
+    }
+
     #[test]
     fn formatting_works() {
-        let formatted = super::format_paths(
-            ".",
-            vec![
-                ("a".to_string(), FileType::File),
-                (format!("b{}c", path::MAIN_SEPARATOR), FileType::File),
-            ],
-            false,
-        );
+        let formatted = super::format_paths(".", test_input(), false);
 
         let bc_path = format!("b{}c", path::MAIN_SEPARATOR);
         let b_path = format!(".{}b", path::MAIN_SEPARATOR);
